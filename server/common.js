@@ -17,6 +17,9 @@ export default function API(axios) {
     getContractBalcnce () {
       return axios.get(`/getTokenBalance/${contract}/iost/1`)
     },
+    getTotaldestroy () {
+      return axios.get(`${apiUrl}/totaldestroy`)
+    },
     getTokenBalcnce (id) {
       return axios.get(`/getTokenBalance/${id}/abct/1`)
     },

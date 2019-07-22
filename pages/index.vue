@@ -61,6 +61,10 @@
           <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
           <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
         </div>
+        <div class="exchange-pool mt-15">
+          <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT'}}  </span>
+          <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
+        </div>
       </div>
       <div class="tips-view mt-15" @click="historyModal('recharge')">资金池充值记录</div>
       <div class="exchange-btn mt-20" @click="toRoute('exchange')" >兑换IOST</div>
@@ -133,6 +137,7 @@ export default {
       navigator:{},
       startPrice:'',
       endPrice:'',
+      totaldestroy:'',
       priceTimePercent:0,
       font_size:'fs-20',
       changeType:'ratio',
@@ -159,6 +164,10 @@ export default {
     //资金池
     this.$common.getContractBalcnce().then( res =>{
       this.contractBalance = res
+    })
+    //已兑换的ABCT
+    this.$common.getTotaldestroy().then( res =>{
+      this.totaldestroy = res
     })
     this.navigator = window.navigator
     //价格
