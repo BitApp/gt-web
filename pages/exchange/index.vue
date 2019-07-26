@@ -169,7 +169,7 @@ export default {
           ga('send','event',{
             eventCategory: `ABCTexchange`, //类型 exchange
             eventAction: `exchangeToIOST`, 
-            eventLabel:`account:${this.walletAccount},amount:${exchangeNumber},status:success`,
+            eventLabel:`account:${this.walletAccount},amount:${exchangeNumber},status:success,txhash:${trx}`,
             eventValue: parseInt(exchangeNumber) //兑换的数量 失败为0 不统计
           })
         }

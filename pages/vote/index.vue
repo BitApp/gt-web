@@ -176,7 +176,7 @@ export default {
           ga('send','event',{
             eventCategory: `ABCTvote`, //类型 vote  
             eventAction: `voteToIOSTABC`, // 投票的节点
-            eventLabel:`account:${this.walletAccount},amount:${tmpvoteNumber},status:success`,
+            eventLabel:`account:${this.walletAccount},amount:${tmpvoteNumber},status:success,txhash:${trx}`,
             eventValue: parseInt(tmpvoteNumber) //投票的数量 失败为0 不统计
           })
         }

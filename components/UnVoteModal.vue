@@ -46,6 +46,7 @@ export default {
       this.isshowModal = false
       const iost = IWalletJS.newIOST(IOST)
       const ctx = iost.callABI('vote_producer.iost', "unvote", [this.walletAccount, item.option, item.votes.toString()])
+      ctx.gasLimit = 300000
       iost.signAndSend(ctx).on('pending', (trx) => {
         if (!this.isshowModal) {
           this.isshowModal = true
@@ -53,7 +54,7 @@ export default {
           ga('send','event',{
             eventCategory: `Unvote`, //类型 unvote  
             eventAction: `Unvote`, 
-            eventLabel:`account:${this.walletAccount},producer:${item.option},amount:${item.votes},status:success`,
+            eventLabel:`account:${this.walletAccount},producer:${item.option},amount:${item.votes},status:success,txhash:${trx}`,
             eventValue: parseInt(item.votes) //投票的数量 失败为0 不统计
           })
         }
