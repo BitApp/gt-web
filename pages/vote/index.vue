@@ -166,7 +166,7 @@ export default {
       this.txMessage = ''
       const iost = IWalletJS.newIOST(IOST)
       const ctx = iost.callABI('vote_producer.iost', "vote", [this.walletAccount, 'iostabc',tmpvoteNumber.toString()])
-      ctx.gasLimit = 1000000
+      ctx.gasLimit = 300000
       iost.signAndSend(ctx).on('pending', (trx) => {
         if (!this.isshowModal) {
           this.isshowModal = true
