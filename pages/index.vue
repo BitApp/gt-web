@@ -62,8 +62,7 @@
           <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
         </div>
         <div class="exchange-pool mt-15">
-          <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT'}}  </span>
-          <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
+          <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
         </div>
       </div>
       <div class="tips-view mt-15" @click="historyModal('recharge')">资金池充值记录</div>
