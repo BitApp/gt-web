@@ -29,7 +29,7 @@ export default function API(axios) {
     getPrice () {
       return axios.get(`${apiUrl}/price`)
     },
-    getObtainHistory ({ page = 1, size = 20 } = {}) {
+    getObtainHistory ({ page = 1, size = 10 } = {}) {
       return axios.get(`${apiUrl}/historyobtainabct`,{
         params: {
           page,
@@ -37,7 +37,7 @@ export default function API(axios) {
         }
       })
     },
-    getIssueHistory (account, { page = 1, size = 20 } = {}) {
+    getIssueHistory (account, { page = 1, size = 10 } = {}) {
       return axios.get(`${apiUrl}/issueobtainabct`,{
         params: {
           account,
@@ -46,7 +46,7 @@ export default function API(axios) {
         }
       })
     },
-    getExchangeHistory (account, { page = 1, size = 20 } = {}) {
+    getExchangeHistory (account, { page = 1, size = 10 } = {}) {
       return axios.get(`${apiUrl}/exchangeobtainabct`,{
         params: {
           account,
@@ -55,7 +55,7 @@ export default function API(axios) {
         }
       })
     },
-    getRechargeHistory ({ page = 1, size = 20 } = {}) {
+    getRechargeHistory ({ page = 1, size = 10 } = {}) {
       return axios.get(`${apiUrl}/historytopupabct`,{
         params: {
           page,
@@ -63,5 +63,22 @@ export default function API(axios) {
         }
       })
     },
+    getRedeemHistory (account,{ page = 1, size = 10 } = {}) {
+      return axios.get(`${iosturl}/pool/unvotelist`,{
+        params: {
+          account,
+          page,
+          size,
+        }
+      })
+    },
+    getTaskList({ page = 1, size = 10 } = {}){
+      return axios.get(`${iosturl}/pool/speeduplist`,{
+        params: {
+          page,
+          size,
+        }
+      })
+    }
   }
 }

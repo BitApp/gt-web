@@ -1,6 +1,6 @@
 <template>
   <b-modal  ref="history-modal" class="modal" hide-footer @hide="modalHide">
-    <div class="nodata-view" v-if="(issueList.length == 0 && type == 'issue') || (exchangeList.length == 0&& type == 'exchange') ||  (rechargeHistory.length == 0&& type == 'recharge')">
+    <div class="nodata-view" v-if="(issueList.length == 0 && type == 'issue') || (exchangeList.length == 0&& type == 'exchange') ||  (rechargeHistory.length == 0&& type == 'recharge') || (redeemList.length == 0 && type == 'redeem')">
       暂无数据
     </div>
     <div v-else>
@@ -17,6 +17,11 @@
       <b-list-group v-if="rechargeHistory.length>0">
         <b-list-group-item class="item"  v-for="(item,index) in rechargeHistory" :key="index">
           <span>IOST数量：{{item.iost_amount}}</span> <span class="ml-2">充值块：{{item.block}}</span>
+        </b-list-group-item>
+      </b-list-group>
+      <b-list-group v-if="redeemList.length>0">
+        <b-list-group-item class="item"  v-for="(item,index) in redeemList" :key="index">
+          <span>IOST数量：{{item.amount}}</span> <span class="ml-2">时间：{{timeToLocal(item.time)}}</span>
         </b-list-group-item>
       </b-list-group>
       <div class="pagination-view">
@@ -45,6 +50,7 @@ export default {
       type:'',
       exchangeList:[],
       rechargeHistory:[],
+      redeemList:[],
       totalCount:0,
       pagination: {
         page: 1,
@@ -64,6 +70,10 @@ export default {
       this.issueList = []
       this.totalCount = 0
       this.pagination.page = 1
+    },
+    timeToLocal(time){
+      var date = new Date(time)
+      return date.toLocaleString()
     },
     pageChange(page){
       if (page == this.pagination.page) {
@@ -86,6 +96,11 @@ export default {
       } else if (type == 'recharge') {
         this.$common.getRechargeHistory(this.pagination).then( res =>{
           this.rechargeHistory = res.actions
+          this.totalCount = res.total
+        })
+      } else if ( type == 'redeem') {
+        this.$common.getRedeemHistory(this.walletAccount,this.pagination).then( res =>{
+          this.redeemList = res.data
           this.totalCount = res.total
         })
       }

@@ -3,53 +3,125 @@
     <div>
       <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
     </div>
-    <div class="banner-bg mt-10">
-      <div class="banner">
-        <div class="banner-content d-flex">
-          <img class="icon-abct" src="~/assets/imgs/icon_abct.svg" width="75">
-          <div class="banner-content-right">
-            <div>
-              <span @click="ruleModal('abct')">什么是ABCT ></span>
-            </div>
-            <div class="mt-8">
-              <!-- fixedNumber(price,6) -->
-              <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
-              <no-ssr>
-                <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
-              </no-ssr>
-            </div>
-            <div class="mt-8">
-              <!-- <span class="fs-14" to="/">当日涨幅：<DiffLabel slot="activator" :diff="priceInfo.percent_change_24h" :formatter="(text) => fixedNumber(text,2) + '%'" tag="sup" class="fz-12" /></span> -->
-              <!-- <span class="ml-5">|</span> -->
-              <span class="fs-14" to="/">涨幅：<DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
-            </div>
-          </div>
+    <div class="top-view mt-10">
+      <div class="top-img-view">
+        <p class="font-weight-bold fs-22">ABCT POOL</p>
+        <p>综合年化收益 20% + ABCT 双挖</p>
+      </div>
+      <div class="price-view">
+        <div>
+          <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
+          <no-ssr>
+            <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
+          </no-ssr>
+          <span class="fs-14"><DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
         </div>
+        <div class="pool-tip-item">1. 两种参与方式（投票参与和挖矿参与）</div>
+        <div class="pool-tip-item">2. 独创的加速任务玩法，不投票也能轻松赚收益</div>
+        <div class="pool-tip-item"><span>3. 挖矿就送 ABCT</span> <span class="ml-5 abct-tip" @click="ruleModal('abct')">什么是ABCT ></span> </div>
       </div>
     </div>
-    <div class="records mt-15" style="overflow:hidden">
+    <!-- <div class="records mt-15" style="overflow:hidden">
       <div v-if="historyInfo" :class="['animated', historyDirect ==='in'?'slideInUp':'slideOutUp', 'infinite', 'slow']">
         {{historyInfo.name + '\xa0'}} 刚刚获得了 {{ '\xa0'+fixedNumber(historyInfo.amount,4) + '\xa0'}} ABCT 
       </div>
+    </div> -->
+    <div class="poolinfo-view mt-15">
+      <div class="poolinfo-tip-item">矿池总量：{{poolInfo.votes}}</div>
+      <div class="poolinfo-tip-item">7日年化利率：</div>
+      <div class="poolinfo-tip-item">已发放收益：</div>
     </div>
-    <div class="vote mt-15">
-      <div class="vote-content d-flex">
-        <div class="w100p">
-          <div>我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
-          <div class="on-voting d-flex mt-2">
-            <span>投票中的IOST：{{votebalances}}</span>
-          </div>
-          <div class="frozen-line mt-2">
-              <span>冻结中的IOST：{{frozenbalances}}</span>
-              <b-link style="color:#FF768A;" @click="unvoteModal()">马上赎回</b-link>
+    <div class="tabs-view mt-15">
+      <b-tabs
+        active-nav-item-class="font-weight-bold active-tab"
+        nav-class="btab"
+        content-class="tab-content-view"
+        align="center" 
+        fill>
+        <b-tab title="挖矿" active >
+          <div class="pool" v-if="isVote">
+            <div class="income-view">
+              <p>我的收益</p>
+              <p class="list-text">收益记录</p>
             </div>
-        </div>
-      </div>
-      <div class="vote-btn mt-20" @click="toRoute('vote')">投票免费抢</div>
-      <div class="tips-view mt-15">
-        <span @click="historyModal('issue')">我的分红记录</span>
-        <span @click="ruleModal('issue')">发行规则</span>
-      </div>
+            <div class="income-view">
+              <div>
+                <p>总收益</p>
+                <p>IOST</p>
+              </div>
+              <div>
+                <p>昨日收益</p>
+                <p>IOST</p>
+              </div>
+              <div>
+                <p>本金</p>
+                <p>{{fixedNumber(accountPoolNumber,4)+'\xa0'}}IOST</p>
+              </div>
+            </div>
+            <div class="income-view">
+              <div>
+                <div class="pool-btn exchange-btn">追加</div>
+                <div class="pool-btn vote-btn" @click="$refs.redeemModal.show()">赎回</div>
+              </div>
+              <p class="list-text" @click="historyModal('redeem')">赎回记录</p>
+            </div>
+          </div>
+          <div class="pool" v-else>
+            <div class="input-view">
+              <p class="lable-text">参与额度</p>
+              <b-form-input focus type="number" autocomplete="off" size="sm"></b-form-input>
+              <b-input-group-append>
+                <div class="input-append">IOST</div>
+              </b-input-group-append>
+            </div>
+            <div class="income-view">
+              <p>预估收益</p>  
+              <p>IOST/日</p>
+              <p>ABCT/日</p>
+            </div>
+            <div class="vote-btn">马上参与享20% 年化收益</div>
+            <div class="income-view">
+              <p>可随时赎回，无锁定期，全网最低手续费</p>
+              <p>查看合约 ></p>
+            </div>
+          </div>
+        </b-tab>
+        <b-tab title="投票">
+          <div class="vote">
+            <div class="vote-content d-flex">
+              <div class="w100p">
+                <div>我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
+                <div class="on-voting d-flex mt-2">
+                  <span>投票中的IOST：{{votebalances}}</span>
+                </div>
+                <div class="frozen-line mt-2">
+                    <span>冻结中的IOST：{{frozenbalances}}</span>
+                    <b-link style="color:#FF768A;" @click="unvoteModal()">马上赎回</b-link>
+                  </div>
+              </div>
+            </div>
+            <div class="vote-btn mt-20" @click="toRoute('vote')">投票免费抢</div>
+            <div class="tips-view mt-15">
+              <span @click="historyModal('issue')">我的分红记录</span>
+              <span @click="ruleModal('issue')">发行规则</span>
+            </div>
+          </div>
+        </b-tab>
+        <b-tab title="任务">
+          <div v-if="taskList.length > 0">
+            <div class="task-view" v-for="(item,index) in taskList" :key="index">
+              <div class="task-info">
+                <span>IOST</span> <span>天</span> <span>收益:</span>
+              </div>
+              <div class="task-btn vote-btn">赚取收益</div>
+            </div>
+          </div>
+          <div v-else>
+            Not
+          </div>
+          <div class="task-list">任务记录</div>
+        </b-tab>
+      </b-tabs>
     </div>
     <div class="exchange mt-20">
       <div class="exchange-tip">
@@ -97,6 +169,11 @@
         </b-button>
       </template>
     </b-modal>
+    <b-modal ref="redeemModal" centered>
+      <div>
+        <b-form-input placeholder="redeem number"></b-form-input>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -109,7 +186,7 @@ import { CountUp } from 'countup.js/dist/countUp';
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
 
-
+const POOLContract = 'Contract2aTDVrGVdTMCAM14JWJ4wG9C7FVmAKQedB8yqgPDbciS'
 export default {
   components: {
     DiffLabel,
@@ -145,6 +222,12 @@ export default {
       modalText:'',
       language:'zh_Hans_CN',
       ref:'',
+      
+      isAppend:false,
+      isVote:false,
+      poolInfo:{},
+      accountPoolNumber:0,
+      taskList:[],
       langs:[
         {value:"en_US",text:'English'},
         {value:"zh_Hans_CN",text:'简体中文'},
@@ -170,8 +253,10 @@ export default {
     })
     this.navigator = window.navigator
     //价格
+    this.getPoolInfo()
     this.getPriceDown()
-    this.getObtainHistory()
+    // this.getObtainHistory()
+    this.getTaskList()
     if (/ios|ipad|iphone/i.test(navigator.userAgent)) {
       if (window.innerWidth < 400){
         this.font_size = 'fs-18'
@@ -192,6 +277,19 @@ export default {
         this.accountInfo = account
         this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
         this.frozenbalances =  account.frozen_balances.reduce((reduced,frozen) => frozen.amount ? reduced+frozen.amount:0,0)
+      })
+      this.$rpc.blockchain.getContractStorage(POOLContract,this.walletAccount,true).then(res =>{
+        if (res.data == 'null') {
+          this.isVote = false
+          return
+        }
+        this.isVote = true
+        this.accountPoolNumber = res.data * 1
+      })
+    },
+    getPoolInfo(){
+      this.$rpc.blockchain._getContractVote(POOLContract,true).then(res =>{
+        this.poolInfo = res.vote_infos[0]
       })
     },
     toTxHash(){
@@ -315,6 +413,14 @@ export default {
         this.historyChange()
       })
     },
+    getTaskList(){
+      this.$common.getTaskList().then( res =>{
+        // this.historyList = res.data
+        // this.showIndex = 0
+        // this.historyChange()
+        this.taskList = res.actions
+      })
+    },
     initIwallet(){
       const _this = this
       var timeInterval = setInterval(() => {
@@ -361,44 +467,38 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .abct-web-index {
   padding: 15px;
   .mt-8 {
     margin-top: 8px;
   }
-  .banner-bg {
-    background: url(~assets/imgs/abct_bg@2x.png) 0 0 no-repeat #1f166b;
-    background-size: cover;
-    height: 157px;
-    border-radius: 8px;
-    // box-shadow: #111 1px 1px 0;
-    .banner{
-      a{
-        color:white;
-        opacity: 0.7;
+  .top-view {
+    border-radius: 10px;
+    background-color: #1F166B;
+    .top-img-view{
+      background: url(~assets/imgs/banner.svg) 0 0 round; 
+      height: 75px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .price-view{
+      padding: 20px 15px 10px;
+      #price{
+        text-align: left;
+        width: 110px;
+        display: inline-block;
       }
-      padding: 6px;
-      height: 151px;
-      border-radius: 8px;
-      background: transparent;
-      .icon-abct{
-        border-radius: 50px;
-        box-shadow:#222 0 0 4px;
+      .rising {
+        color: #0DB767;
       }
-      .banner-content {
-        align-items: center;
-        height: 100%;
-        .banner-content-right{
-          margin-left:12px;
-          flex: 1;
-          #price{
-            text-align: left;
-            display: inline-block;
-          }
-          .rising {
-            color: #0DB767;
-          }
+      .pool-tip-item{
+        line-height: 25px;
+        .abct-tip{
+          color: #FF768A;
+          font-size: 12px;
         }
       }
     }
@@ -409,22 +509,122 @@ export default {
     animation-duration: 2.01s;
     animation-iteration-count: infinite;
   }
-  .vote {
-    a{
-      color:#FF768A;
+  .poolinfo-view{
+    padding: 10px 15px;
+    background-color: #1F166B;
+    color: #FFF;
+    border-radius: 10px;
+    .poolinfo-tip-item{
+      line-height: 25px;
     }
-    .vote-content {
-      padding:15px 15px;
-      align-items: center;
-      background: #1F166B;
-      border-radius: 8px;
-      .on-voting {
-        justify-content: space-between;
+  }
+  .tabs-view{
+    padding: 0 15px;
+    background-color: #1F166B;
+    border-radius: 10px;
+    .btab{
+      border: none;
+      font-size: 16px;
+    }
+    .active-tab{
+      color: #69EFF9 !important;
+      border: none;
+      border-bottom: 1px solid #69EFF9;
+      background-color: transparent;
+    }
+    .nav-tabs .nav-link{
+      color: #FFF;
+    }
+    .tab-content-view{
+      padding: 10px 0;
+    }
+    .vote {
+      a{
+        color:#FF768A;
       }
-      .frozen-line{
+      .vote-content {
+        align-items: center;
+        background: #1F166B;
+        border-radius: 8px;
+        .on-voting {
+          justify-content: space-between;
+        }
+        .frozen-line{
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+    .pool{
+      .input-view{
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        .form-control{
+          color: #FFF;
+          background-color: #0F0258;
+          border: none;
+        }
+        .form-control:focus{
+          box-shadow: none;
+          background-color: #0F0258;
+          color: #FFF;
+        }
+        .lable-text{
+          width: 120px;
+        }
+        .input-append{
+          width: 60px;
+          line-height: 31px;
+          text-align: center;
+          background-color: #0F0258;
+        }
       }
+      .income-view{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        align-items: center;
+        .pool-btn{
+          display: inline-block;
+          line-height: 30px;
+          font-size: 14px;
+          width: 90px;
+          border-radius: 6px;
+        }
+        .pool-btn:first-child{
+          margin-right: 20px;
+        }
+        .list-text{
+          color: #FF768A;
+        }
+      }
+    }
+    .task-view{
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      align-items: center;
+      .task-info{
+        flex: 1;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-right: 15px;
+        background-color: #0F0258;
+        height: 35px;
+      }
+      .task-btn{
+        display: inline-block;
+        line-height: 35px;
+        font-size: 15px;
+        width: 90px;
+      }
+    }
+    .task-list{
+      display: inline-block;
+      line-height: 35px;
+      color: #FF768A;
     }
   }
   .tip-view {

@@ -106,20 +106,24 @@
 .exchange-btn{
   color: #fff;
   line-height: 45px;
-  font-size: 20px;
+  font-size: 18px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background-image: linear-gradient(59deg, #36F0F7 0%, #35BBF8 100%);
 }
 .vote-btn{
   color: #fff;
   line-height: 45px;
-  font-size: 20px;
+  font-size: 18px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 8px;
   background-image: linear-gradient(59deg, #FF768A 0%, #F4398A 100%);
 }
 .alert{
   position: fixed;
   width: 90%;
+}
+.flex-sb{
+  display: flex;
+  justify-content: space-between;
 }

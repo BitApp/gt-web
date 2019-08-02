@@ -6,6 +6,11 @@ export default function ({ app, store, req, $axios }, inject) {
   
   const rpc = new IOST.RPC(httpProvider)
 
+  rpc.blockchain._getContractVote = function (contractID, pending = true) {
+    const api = `getContractVote/${contractID}/${pending}`
+    return this._provider.send('get', api)
+  }
+
   inject('rpc', rpc)
   inject('common', new Common($axios))
 
