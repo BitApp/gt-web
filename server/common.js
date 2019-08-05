@@ -79,6 +79,22 @@ export default function API(axios) {
           size,
         }
       })
-    }
+    },
+    getIncome(account){
+      return axios.get(`${iosturl}/pool/totaldividend`,{
+        params: {
+          account
+        }
+      })
+    },
+    getIncomeList(account,{ page = 1, size = 10 } = {}){
+      return axios.get(`${iosturl}/pool/dividendlist`,{
+        params: {
+          account,
+          page,
+          size,
+        }
+      })
+    },
   }
 }

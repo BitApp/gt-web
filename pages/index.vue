@@ -1,5 +1,17 @@
 <template>
   <div class="abct-web-index">
+    <b-alert
+      :variant="variant"
+      fade
+      :show="dismissCountDown"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+    >
+      <div>{{alertText}}</div>
+      <div class="mt-2" v-if="faileddes != ''">
+        {{faileddes.message||faileddes}}
+      </div>
+    </b-alert>
     <div>
       <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
     </div>
@@ -29,7 +41,7 @@
     <div class="poolinfo-view mt-15">
       <div class="poolinfo-tip-item">矿池总量：{{poolInfo.votes}}</div>
       <div class="poolinfo-tip-item">7日年化利率：</div>
-      <div class="poolinfo-tip-item">已发放收益：</div>
+      <div class="poolinfo-tip-item">已发放收益：{{poolIncome}}</div>
     </div>
     <div class="tabs-view mt-15">
       <b-tabs
@@ -42,16 +54,16 @@
           <div class="pool" v-if="isVote">
             <div class="income-view">
               <p>我的收益</p>
-              <p class="list-text">收益记录</p>
+              <p class="list-text" @click="historyModal('income')">收益记录</p>
             </div>
             <div class="income-view">
               <div>
                 <p>总收益</p>
-                <p>IOST</p>
+                <p>{{fixedNumber(accountIncome,4)  + '\xa0'}}IOST</p>
               </div>
               <div>
-                <p>昨日收益</p>
-                <p>IOST</p>
+                <p>上周期收益</p>
+                <p>{{fixedNumber(lastIncome,4) +'\xa0'}}IOST</p>
               </div>
               <div>
                 <p>本金</p>
@@ -60,7 +72,7 @@
             </div>
             <div class="income-view">
               <div>
-                <div class="pool-btn exchange-btn">追加</div>
+                <div class="pool-btn exchange-btn" @click="isVote = false;isBack = true">追加</div>
                 <div class="pool-btn vote-btn" @click="$refs.redeemModal.show()">赎回</div>
               </div>
               <p class="list-text" @click="historyModal('redeem')">赎回记录</p>
@@ -69,20 +81,20 @@
           <div class="pool" v-else>
             <div class="input-view">
               <p class="lable-text">参与额度</p>
-              <b-form-input focus type="number" autocomplete="off" size="sm"></b-form-input>
+              <b-form-input focus type="number" autocomplete="off" size="sm" v-model="votepoolNumber" @update="poolChange()"></b-form-input>
               <b-input-group-append>
                 <div class="input-append">IOST</div>
               </b-input-group-append>
             </div>
             <div class="income-view">
               <p>预估收益</p>  
-              <p>IOST/日</p>
-              <p>ABCT/日</p>
+              <p>{{fixedNumber(votepoolincome,5)+'\xa0'}} IOST/日</p>
             </div>
-            <div class="vote-btn">马上参与享20% 年化收益</div>
+            <div class="vote-btn" @click="votePool">马上参与享20% 年化收益</div>
+            <div v-if="isBack" class="back-view"> <p @click="isVote = true">返回</p> </div>
             <div class="income-view">
               <p>可随时赎回，无锁定期，全网最低手续费</p>
-              <p>查看合约 ></p>
+              <p style="min-width:80px;color:#FF768A;" @click="toContract">查看合约 ></p>
             </div>
           </div>
         </b-tab>
@@ -108,18 +120,18 @@
           </div>
         </b-tab>
         <b-tab title="任务">
-          <div v-if="taskList.length > 0">
+          <div v-if="taskList && taskList.length > 0">
             <div class="task-view" v-for="(item,index) in taskList" :key="index">
               <div class="task-info">
-                <span>IOST</span> <span>天</span> <span>收益:</span>
+                <span>{{item.amount + '\xa0'}}IOST</span> <span>{{item.timeLen+'\xa0'}}天</span> <span>收益:{{'\xa0'+ fixedNumber(item.profitAmount,4)}}</span>
               </div>
-              <div class="task-btn vote-btn">赚取收益</div>
+              <div class="task-btn vote-btn" @click="$refs.speedModal.show();speedInfo = item;">赚取收益</div>
             </div>
           </div>
-          <div v-else>
-            Not
+          <div v-else style="text-align:center;">
+            暂无数据
           </div>
-          <div class="task-list">任务记录</div>
+          <div class="task-list" @click="historyModal('task')">任务记录</div>
         </b-tab>
       </b-tabs>
     </div>
@@ -152,7 +164,7 @@
         <div class="mt-15">扫码下载PureWallet，随时管理你的ABCT收益</div>
       </div>
     </div>
-    <HistoryModal ref="historyModal" />
+    <HistoryModal ref="historyModal" @toTaskInfo="taskInfo"/>
     <TipsModal ref="tipsModal" />
     <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
     <div class="mask-view" v-show="isloading">
@@ -160,6 +172,7 @@
     </div>
     <b-modal ref="statusModal">
       <div style="color:#000;">{{modalText}}</div>
+      <div style="color:#721c24">{{txMessage}}</div>
       <template slot="modal-footer" slot-scope="{cancel}">
         <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
           查看交易结果
@@ -171,8 +184,29 @@
     </b-modal>
     <b-modal ref="redeemModal" centered>
       <div>
-        <b-form-input placeholder="redeem number"></b-form-input>
+        <b-form-input v-model="unvotepoolNumber" placeholder="redeem number" type="number" autocomplete="off"></b-form-input>
       </div>
+      <template slot="modal-footer" slot-scope="{cancel}">
+        <b-button size="sm" variant="info" @click="unVotePool">
+          确定
+        </b-button>
+        <b-button size="sm" @click="cancel(unvotepoolNumber = '')">
+          Cancel
+        </b-button>
+      </template>
+    </b-modal>
+    <b-modal ref="speedModal" centered>
+      <div>
+        <b-form-input v-model="speedNumber" placeholder="speed number" type="number" autocomplete="off"></b-form-input>
+      </div>
+      <template slot="modal-footer" slot-scope="{cancel}">
+        <b-button size="sm" variant="info" @click="speed(speedInfo)">
+          确定
+        </b-button>
+        <b-button size="sm" @click="cancel(speedNumber = '')">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -185,6 +219,7 @@ import UnVoteModal from '~/components/UnVoteModal.vue'
 import { CountUp } from 'countup.js/dist/countUp';
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
+import IOST from 'iost'
 
 const POOLContract = 'Contract2aTDVrGVdTMCAM14JWJ4wG9C7FVmAKQedB8yqgPDbciS'
 export default {
@@ -199,6 +234,8 @@ export default {
   },
   data () {
     return {
+      dayABCT: 864000,
+      isBack:false,
       walletAccount:'',
       priceInfo:{},
       contractBalance:{},
@@ -220,12 +257,29 @@ export default {
       isloading: false,
       txhash:'',
       modalText:'',
+      txMessage:'',
       language:'zh_Hans_CN',
       ref:'',
+      producerInfo:{},
       
+      dismissSecs: 3,
+      dismissCountDown: 0,
+      variant:'danger',
+      alertText:'',
+      faileddes:'',
+      isshowModal:false,//避免弹框两次
+      
+      speedNumber:'',
+      speedInfo:{},
+      poolIncome:0,
+      votepoolincome:'',
+      accountIncome:0,
+      lastIncome:0,
       isAppend:false,
       isVote:false,
       poolInfo:{},
+      votepoolNumber:'',
+      unvotepoolNumber:'',
       accountPoolNumber:0,
       taskList:[],
       langs:[
@@ -251,12 +305,17 @@ export default {
     this.$common.getTotaldestroy().then( res =>{
       this.totaldestroy = res
     })
+    //节点信息
+    this.$common.getProducerInfo('iostabc').then( res => {
+      this.producerInfo = res
+    })
     this.navigator = window.navigator
     //价格
     this.getPoolInfo()
     this.getPriceDown()
     // this.getObtainHistory()
     this.getTaskList()
+    
     if (/ios|ipad|iphone/i.test(navigator.userAgent)) {
       if (window.innerWidth < 400){
         this.font_size = 'fs-18'
@@ -286,16 +345,280 @@ export default {
         this.isVote = true
         this.accountPoolNumber = res.data * 1
       })
+      this.$common.getIncome(this.walletAccount).then( res => {
+        this.accountIncome = res.amount
+      })
+      this.$common.getIncomeList(this.walletAccount,{page:1,size:1}).then( res =>{
+        if (res.data.length) {
+          this.lastIncome = res.data[0].amount
+        }
+      })
     },
     getPoolInfo(){
       this.$rpc.blockchain._getContractVote(POOLContract,true).then(res =>{
         this.poolInfo = res.vote_infos[0]
+      })
+      this.$common.getIncome().then(res => {
+        this.poolIncome = res.amount
       })
     },
     toTxHash(){
       if (this.txhash) {
         window.location = `https://www.iostabc.com/tx/${this.txhash}`
       }
+    },
+    toContract(){
+      window.location = `https://www.iostabc.com/contract/${POOLContract}`
+    },
+    taskInfo(task){
+      this.speedInfo = task
+      this.$refs.speedModal.show()
+    },
+    speed(item){
+      let speedNumber = this.speedNumber * 1
+      if (speedNumber < 1 ) {
+        this.variant = 'danger'
+        this.alertText = '加速数量不能小于1'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      if (speedNumber > this.accountInfo.balance) {
+        this.variant = 'danger'
+        this.alertText = '加速数量超过可使用余额'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      if (speedNumber > item.amount) {
+        this.variant = 'danger'
+        this.alertText = '加速数量超过可加速总量'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      this.isshowModal = false
+      this.modalText = `加速完成，数量:${this.fixedNumber(speedNumber, 6) +'\xa0'}IOST 赚取收益:${this.fixedNumber(item.profitAmount,4)+'\xa0'}IOST`
+      this.txMessage = ''
+
+      const iost = IWalletJS.newIOST(IOST)
+      const ctx = iost.callABI(POOLContract, "speedUp", [this.walletAccount,item.hash,speedNumber.toString()])
+      ctx.gasLimit = 300000
+      iost.signAndSend(ctx).on('pending', (trx) => {
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.$refs.speedModal.hide()
+          this.getAccountInfo()
+          this.getTaskList()
+          this.txhash = trx
+          this.speedNumber = ''
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `speedUp`, //类型 exchange
+            eventAction: `speedUp`, 
+            eventLabel:`account:${this.walletAccount},amount:${speedNumber},status:success,txhash:${trx}`,
+            eventValue: parseInt(speedNumber)
+          })
+        }
+      })
+      .on('success', (result) => {
+        if (result.tx_hash) {
+          this.getAccountInfo()
+          this.getTaskList()
+        }
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.$refs.speedModal.hide()
+          this.txhash = result.tx_hash
+          this.speedNumber = ''
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `speedUp`, 
+            eventAction: `speedUp`, 
+            eventLabel:`account:${this.walletAccount},amount:${speedNumber},status:success,txhash:${result.tx_hash}`,
+            eventValue: parseInt(poolnumber) 
+          })
+        }
+      })
+      .on('failed', (failed) => {
+        if (/rejected/i.test(failed)) {
+          return
+        }
+        if (!this.isshowModal) {
+          this.$refs.speedModal.hide()
+          this.isshowModal = true
+          this.modalText = '加速失败'
+          this.txhash = failed.tx_hash ? failed.tx_hash:''
+          this.txMessage = JSON.stringify(failed)
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `speedUpFailed`, 
+            eventAction: `speedUp`, 
+            eventLabel:`account:${this.walletAccount},amount:${speedNumber},message:${JSON.stringify(failed)}`,
+          })
+        }
+      })
+
+    },
+    votePool(){
+      let poolnumber = this.votepoolNumber * 1
+      if (poolnumber < 1 ) {
+        this.variant = 'danger'
+        this.alertText = '数量不能小于1'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      if (poolnumber > this.accountInfo.balance) {
+        this.variant = 'danger'
+        this.alertText = '数量超过可使用余额'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+        
+      this.isshowModal = false
+      this.modalText = `参与挖矿完成，数量:${this.fixedNumber(poolnumber, 6) +'\xa0'}IOST`
+      this.txMessage = ''
+
+      const iost = IWalletJS.newIOST(IOST)
+      const ctx = iost.callABI(POOLContract, "vote", [this.walletAccount,poolnumber.toString()])
+      ctx.gasLimit = 300000
+      iost.signAndSend(ctx).on('pending', (trx) => {
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.getAccountInfo()
+          this.txhash = trx
+          this.votepoolNumber = ''
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `voteToPool`, //类型 exchange
+            eventAction: `voteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},status:success,txhash:${trx}`,
+            eventValue: parseInt(poolnumber)
+          })
+        }
+      })
+      .on('success', (result) => {
+        if (result.tx_hash) {
+          this.getAccountInfo()
+        }
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.votepoolNumber = ''
+          this.txhash = result.tx_hash
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `voteToPool`, 
+            eventAction: `voteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},status:success,txhash:${result.tx_hash}`,
+            eventValue: parseInt(poolnumber) 
+          })
+        }
+      })
+      .on('failed', (failed) => {
+        if (/rejected/i.test(failed)) {
+          return
+        }
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.modalText = '兑换失败'
+          this.votepoolNumber = ''
+          this.txhash = failed.tx_hash ? failed.tx_hash:''
+          this.txMessage = JSON.stringify(failed)
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `voteToPoolFailed`, 
+            eventAction: `voteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},message:${JSON.stringify(failed)}`,
+          })
+        }
+      })
+    },
+    unVotePool(){
+      let poolnumber = this.unvotepoolNumber
+      if (poolnumber <= 0 ) {
+        this.variant = 'danger'
+        this.alertText = '数量不能小于0'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      if (poolnumber > this.accountPoolNumber) {
+        this.variant = 'danger'
+        this.alertText = '数量超过可使用余额'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+        
+      this.isshowModal = false
+      this.modalText = `取消挖矿完成，数量:${this.fixedNumber(poolnumber, 6) +'\xa0'}IOST`
+      this.txMessage = ''
+
+      const iost = IWalletJS.newIOST(IOST)
+      const ctx = iost.callABI(POOLContract, "unvote", [this.walletAccount,poolnumber.toString(),'0.0002',true])
+      ctx.gasLimit = 300000
+      iost.signAndSend(ctx).on('pending', (trx) => {
+        if (!this.isshowModal) {
+          this.$refs.redeemModal.hide()
+          this.getTaskList()
+          this.getPoolInfo()
+          this.isshowModal = true
+          this.txhash = trx
+          this.unvotepoolNumber = ''
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `UnvoteToPool`, //类型 exchange
+            eventAction: `UnvoteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},status:success,txhash:${trx}`,
+            eventValue: parseInt(poolnumber)
+          })
+        }
+      })
+      .on('success', (result) => {
+        if (result.tx_hash) {
+          this.getAccountInfo()
+        }
+        if (!this.isshowModal) {
+          this.$refs.redeemModal.hide()
+          this.getTaskList()
+          this.getPoolInfo()
+          this.isshowModal = true
+          this.unvotepoolNumber = ''
+          this.txhash = result.tx_hash
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `UnvoteToPool`, 
+            eventAction: `UnvoteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},status:success,txhash:${result.tx_hash}`,
+            eventValue: parseInt(poolnumber) 
+          })
+        }
+      })
+      .on('failed', (failed) => {
+        if (/rejected/i.test(failed)) {
+          return
+        }
+        if (!this.isshowModal) {
+          this.$refs.redeemModal.hide()
+          this.isshowModal = true
+          this.modalText = '兑换失败'
+          this.unvotepoolNumber = ''
+          this.txhash = failed.tx_hash ? failed.tx_hash:''
+          this.txMessage = JSON.stringify(failed)
+          this.$refs.statusModal.show()
+          ga('send','event',{
+            eventCategory: `UnvoteToPoolFailed`, 
+            eventAction: `UnvoteToPool`, 
+            eventLabel:`account:${this.walletAccount},amount:${poolnumber},message:${JSON.stringify(failed)}`,
+          })
+        }
+      })
+    },
+    poolChange(){
+      if (!this.votepoolNumber) {
+        this.votepoolincome = 0
+        return
+      }
+      var vote = ((0.5 * 210000000)/this.producerInfo.total_votes)/365
+      var voteReward = vote * this.votepoolNumber * 1 //投票收益 1 天
+      var abctReward = ((this.votepoolNumber || 0)/parseInt(this.producerInfo.votes)) * this.dayABCT * 1 * 1
+      var iostReward = abctReward * this.priceInfo.price_ratio
+      this.votepoolincome = voteReward + iostReward
     },
     getPrice(){
       this.$common.getPrice().then( res =>{
@@ -414,11 +737,8 @@ export default {
       })
     },
     getTaskList(){
-      this.$common.getTaskList().then( res =>{
-        // this.historyList = res.data
-        // this.showIndex = 0
-        // this.historyChange()
-        this.taskList = res.actions
+      this.$common.getTaskList({page:1,size:2}).then( res =>{
+        this.taskList = res.data
       })
     },
     initIwallet(){
@@ -440,6 +760,9 @@ export default {
         })
         }
       }, 1000);
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
     },
     fixedNumber(numbers,fixed){
       if (!numbers) {
@@ -598,6 +921,13 @@ export default {
         .list-text{
           color: #FF768A;
         }
+      }
+      .back-view{
+        display: flex;
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+        color: #FF768A;
       }
     }
     .task-view{

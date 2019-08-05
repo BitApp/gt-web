@@ -155,7 +155,6 @@ export default {
       }
       const iost = IWalletJS.newIOST(IOST)
       this.isshowModal = false
-      // this.modalText = '兑换已完成'
       this.modalText = `兑换完成，${exchangeNumber + '\xa0'}ABCT 兑换为 ${this.fixedNumber(exchangeNumber * this.price, 6) +'\xa0'}IOST`
       this.txMessage = ''
       const ctx = iost.callABI('ContractAi3wmFKBRVqfpMvZ2iUL2DtrvaMPXA4JZJypWvW6WaqM', "exchange", [this.walletAccount, exchangeNumber.toString(),this.ref])
