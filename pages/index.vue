@@ -178,7 +178,7 @@
           查看交易结果
         </b-button>
         <b-button size="sm" @click="cancel()">
-          Cancel
+          取消
         </b-button>
       </template>
     </b-modal>
@@ -191,7 +191,7 @@
           确定
         </b-button>
         <b-button size="sm" @click="cancel(unvotepoolNumber = '')">
-          Cancel
+          取消
         </b-button>
       </template>
     </b-modal>
@@ -204,7 +204,7 @@
           确定
         </b-button>
         <b-button size="sm" @click="cancel(speedNumber = '')">
-          Cancel
+          取消
         </b-button>
       </template>
     </b-modal>
@@ -532,21 +532,21 @@ export default {
     },
     unVotePool(){
       let poolnumber = this.unvotepoolNumber
-      if (poolnumber <= 0 ) {
+      if (poolnumber < 1 ) {
         this.variant = 'danger'
-        this.alertText = '数量不能小于0'
+        this.alertText = '赎回数量不能小于1'
         this.dismissCountDown = this.dismissSecs
         return
       }
       if (poolnumber > this.accountPoolNumber) {
         this.variant = 'danger'
-        this.alertText = '数量超过可使用余额'
+        this.alertText = '赎回数量超过可赎回总量'
         this.dismissCountDown = this.dismissSecs
         return
       }
         
       this.isshowModal = false
-      this.modalText = `取消挖矿完成，数量:${this.fixedNumber(poolnumber, 6) +'\xa0'}IOST`
+      this.modalText = `赎回完成，数量:${this.fixedNumber(poolnumber, 6) +'\xa0'}IOST`
       this.txMessage = ''
 
       const iost = IWalletJS.newIOST(IOST)
@@ -596,7 +596,7 @@ export default {
         if (!this.isshowModal) {
           this.$refs.redeemModal.hide()
           this.isshowModal = true
-          this.modalText = '兑换失败'
+          this.modalText = '赎回失败'
           this.unvotepoolNumber = ''
           this.txhash = failed.tx_hash ? failed.tx_hash:''
           this.txMessage = JSON.stringify(failed)
