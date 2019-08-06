@@ -59,11 +59,11 @@
             <div class="income-view">
               <div>
                 <p>总收益</p>
-                <p>{{fixedNumber(accountIncome,4)  + '\xa0'}}IOST</p>
+                <p>{{'＋'+fixedNumber(accountIncome,4)  + '\xa0'}}IOST</p>
               </div>
               <div>
                 <p>上周期收益</p>
-                <p>{{fixedNumber(lastIncome,4) +'\xa0'}}IOST</p>
+                <p>{{'＋'+fixedNumber(lastIncome,4) +'\xa0'}}IOST</p>
               </div>
               <div>
                 <p>本金</p>
@@ -81,14 +81,31 @@
           <div class="pool" v-else>
             <div class="input-view">
               <p class="lable-text">参与额度</p>
-              <b-form-input focus type="number" autocomplete="off" size="sm" v-model="votepoolNumber" @update="poolChange()"></b-form-input>
+              <b-form-input class="ml-1" focus type="number" autocomplete="off" size="sm" v-model="votepoolNumber" @update="poolChange()"></b-form-input>
               <b-input-group-append>
-                <div class="input-append">IOST</div>
+                <div class="input-append">IOST <span class="ml-1" @click="votepoolNumber = parseInt(accountInfo.balance)">全部</span> </div>
               </b-input-group-append>
             </div>
             <div class="income-view">
-              <p>预估收益</p>  
-              <p>{{fixedNumber(votepoolincome,5)+'\xa0'}} IOST/日</p>
+              <p>预估投票奖</p>  
+              <p>{{fixedNumber(voteReward,5)+'\xa0'}} IOST/日</p>
+            </div>
+            <div class="income-view">
+              <p>预估贡献奖</p>  
+              <p>{{fixedNumber(devoteReward,5)+'\xa0'}} IOST/日</p>
+            </div>
+            <div class="income-view">
+              <p>预估ABCT(兑换IOST)</p>  
+              <p>{{fixedNumber(abctReward,5)+'\xa0'}} IOST/日</p>
+            </div>
+            <div class="income-view">
+              <p>预估总收益</p>  
+              <p>{{fixedNumber(allReward,5)+'\xa0'}} IOST/日</p>
+            </div>
+            <div class="mb-2">
+              <b-form-checkbox v-model="exchangeABCT" name="check-button" switch disabled>
+                每天自动兑换ABCT为IOST
+              </b-form-checkbox>
             </div>
             <div class="vote-btn" @click="votePool">马上参与享20% 年化收益</div>
             <div v-if="isBack" class="back-view"> <p @click="isVote = true">返回</p> </div>
@@ -123,7 +140,9 @@
           <div v-if="taskList && taskList.length > 0">
             <div class="task-view" v-for="(item,index) in taskList" :key="index">
               <div class="task-info">
-                <span>{{item.amount + '\xa0'}}IOST</span> <span>{{item.timeLen+'\xa0'}}天</span> <span>收益:{{'\xa0'+ fixedNumber(item.profitAmount,4)}}</span>
+                <span class="task-info-item">{{item.amount + '\xa0'}}IOST</span> 
+                <span class="task-info-item">{{item.timeLen+'\xa0'}}天</span> 
+                <span class="task-info-item">收益:{{'\xa0'+ fixedNumber(item.profitAmount,4)}}</span>
               </div>
               <div class="task-btn vote-btn" @click="$refs.speedModal.show();speedInfo = item;">赚取收益</div>
             </div>
@@ -182,28 +201,34 @@
         </b-button>
       </template>
     </b-modal>
-    <b-modal ref="redeemModal" centered>
-      <div>
+    <b-modal ref="redeemModal" title="正在赎回" centered v-model="redeemModalVisible" @change="redeemModalVisible?unvotepoolNumber = '':''">
+      <div class="modal-input-view">
         <b-form-input v-model="unvotepoolNumber" placeholder="redeem number" type="number" autocomplete="off"></b-form-input>
+        <b-input-group-append>
+          <div class="modal-input-append" @click="unvotepoolNumber = parseInt(accountPoolNumber)">全部</div>
+        </b-input-group-append>
       </div>
       <template slot="modal-footer" slot-scope="{cancel}">
         <b-button size="sm" variant="info" @click="unVotePool">
           确定
         </b-button>
-        <b-button size="sm" @click="cancel(unvotepoolNumber = '')">
+        <b-button size="sm" @click="cancel()">
           取消
         </b-button>
       </template>
     </b-modal>
-    <b-modal ref="speedModal" centered>
-      <div>
+    <b-modal ref="speedModal" title="正在加速" centered v-model="speedModalVisible" @click="speedModalVisible?speedNumber='':''">
+      <div class="modal-input-view">
         <b-form-input v-model="speedNumber" placeholder="speed number" type="number" autocomplete="off"></b-form-input>
+        <b-input-group-append>
+          <div class="modal-input-append" @click="speedNumber = parseInt(speedInfo.amount)">全部</div>
+        </b-input-group-append>
       </div>
       <template slot="modal-footer" slot-scope="{cancel}">
         <b-button size="sm" variant="info" @click="speed(speedInfo)">
           确定
         </b-button>
-        <b-button size="sm" @click="cancel(speedNumber = '')">
+        <b-button size="sm" @click="cancel()">
           取消
         </b-button>
       </template>
@@ -268,7 +293,16 @@ export default {
       alertText:'',
       faileddes:'',
       isshowModal:false,//避免弹框两次
+
+      voteReward:0,
+      devoteReward:0,
+      abctReward:0,
+      allReward:0,
       
+      redeemModalVisible:false,
+      speedModalVisible:false,
+
+      exchangeABCT:true,
       speedNumber:'',
       speedInfo:{},
       poolIncome:0,
@@ -286,7 +320,29 @@ export default {
         {value:"en_US",text:'English'},
         {value:"zh_Hans_CN",text:'简体中文'},
         {value:"zh_Hant_HK",text:'繁體中文'},
-      ]
+      ],
+      tierInfo: { //贡献奖 分级
+        1: {
+          number: 15,
+          scale: 0.5
+        },
+        2: {
+          number: 15,
+          scale: 0.25
+        },
+        3: {
+          number: 14,
+          scale: 0.125
+        },
+        4: {
+          number: 13,
+          scale: 0.075
+        },
+        5: {
+          number: 15,
+          scale: 0.05
+        }
+      }
     }
   },
   head() {
@@ -611,14 +667,23 @@ export default {
     },
     poolChange(){
       if (!this.votepoolNumber) {
-        this.votepoolincome = 0
+        // this.votepoolincome = 0
+        this.voteReward = 0
+        this.devoteReward = 0
+        this.abctReward = 0
+        this.allReward = 0
         return
       }
-      var vote = ((0.5 * 210000000)/this.producerInfo.total_votes)/365
-      var voteReward = vote * this.votepoolNumber * 1 //投票收益 1 天
-      var abctReward = ((this.votepoolNumber || 0)/parseInt(this.producerInfo.votes)) * this.dayABCT * 1 * 1
-      var iostReward = abctReward * this.priceInfo.price_ratio
-      this.votepoolincome = voteReward + iostReward
+      var vote = (0.5 * 210000000)/this.producerInfo.total_votes/365
+      var contribution = (((0.5 * 210000000 * this.tierInfo[this.producerInfo.tag.Tier].scale)/this.tierInfo[this.producerInfo.tag.Tier].number)/( parseInt(this.producerInfo.votes) + parseInt(this.votepoolNumber)))/365
+
+      this.voteReward = vote * this.votepoolNumber * 1 //投票收益 1 天
+      this.devoteReward = vote * this.votepoolNumber * 1 + contribution * this.votepoolNumber *  1 //贡献奖一天
+
+      let abctnumber = ((this.votepoolNumber || 0)/parseInt(this.producerInfo.votes)) * this.dayABCT * 1 * 1 //ABCT 一天
+      this.abctReward = abctnumber * this.priceInfo.price_ratio
+
+      this.allReward = this.voteReward + this.abctReward + this.devoteReward
     },
     getPrice(){
       this.$common.getPrice().then( res =>{
@@ -791,6 +856,24 @@ export default {
 </script>
 
 <style lang="scss">
+.modal-title{
+  color: #000;
+}
+.modal-input-view{
+  display: flex;
+  justify-content: space-between;
+  .modal-input-append{
+    color: #000;
+    width: 50px;
+    line-height: 38px;
+    text-align: center;
+  }
+
+} 
+.custom-control-input:disabled ~ .custom-control-label{
+  line-height: 25px;
+  // color: #FFF;
+}
 .abct-web-index {
   padding: 15px;
   .mt-8 {
@@ -800,9 +883,10 @@ export default {
     border-radius: 10px;
     background-color: #1F166B;
     .top-img-view{
-      background: url(~assets/imgs/banner.svg) 0 0 round; 
+      background: url(~assets/imgs/banner.svg); 
       height: 75px;
       display: flex;
+      background-size: cover;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -849,15 +933,19 @@ export default {
       border: none;
       font-size: 16px;
     }
-    .active-tab{
-      color: #69EFF9 !important;
+    .nav-tabs .nav-link.active{
       border: none;
+      color: #69EFF9 !important;
       border-bottom: 1px solid #69EFF9;
       background-color: transparent;
     }
     .nav-tabs .nav-link{
       color: #FFF;
+      border: none;
     }
+    // .nav-tabs .nav-link:hover{
+    //   border-color: transparent;
+    // }
     .tab-content-view{
       padding: 10px 0;
     }
@@ -897,7 +985,7 @@ export default {
           width: 120px;
         }
         .input-append{
-          width: 60px;
+          width: 90px;
           line-height: 31px;
           text-align: center;
           background-color: #0F0258;
@@ -906,7 +994,7 @@ export default {
       .income-view{
         display: flex;
         justify-content: space-between;
-        padding: 10px 0;
+        padding: 5px 0;
         align-items: center;
         .pool-btn{
           display: inline-block;
@@ -943,6 +1031,9 @@ export default {
         margin-right: 15px;
         background-color: #0F0258;
         height: 35px;
+        .task-info-item{
+          word-break: break-word;
+        }
       }
       .task-btn{
         display: inline-block;
