@@ -24,7 +24,7 @@
         <div>
           <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
           <no-ssr>
-            <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
+            <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?'IOST':/cn/i.test(lang.lang)?'CNY':'USD'}`}}</span>
           </no-ssr>
           <span class="fs-14"><DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
         </div>
@@ -107,7 +107,7 @@
                 每天自动兑换ABCT为IOST
               </b-form-checkbox>
             </div>
-            <div class="vote-btn" @click="votePool">马上参与享20% 年化收益</div>
+            <div class="vote-btn" @click="votePool">马上参与享{{fixedNumber(yearRatio,2)}}%年化收益</div>
             <div v-if="isBack" class="back-view"> <p @click="isVote = true">返回</p> </div>
             <div class="income-view">
               <p>可随时赎回，无锁定期，全网最低手续费</p>
@@ -217,7 +217,7 @@
         </b-button>
       </template>
     </b-modal>
-    <b-modal ref="speedModal" title="正在加速" centered v-model="speedModalVisible" @click="speedModalVisible?speedNumber='':''">
+    <b-modal ref="speedModal" title="正在加速" centered v-model="speedModalVisible" @change="speedModalVisible?speedNumber='':''">
       <div class="modal-input-view">
         <b-form-input v-model="speedNumber" placeholder="speed number" type="number" autocomplete="off"></b-form-input>
         <b-input-group-append>
@@ -298,6 +298,7 @@ export default {
       devoteReward:0,
       abctReward:0,
       allReward:0,
+      yearRatio:0,
       
       redeemModalVisible:false,
       speedModalVisible:false,
@@ -672,6 +673,7 @@ export default {
         this.devoteReward = 0
         this.abctReward = 0
         this.allReward = 0
+        this.yearRatio = 0
         return
       }
       var vote = (0.5 * 210000000)/this.producerInfo.total_votes/365
@@ -684,6 +686,8 @@ export default {
       this.abctReward = abctnumber * this.priceInfo.price_ratio
 
       this.allReward = this.voteReward + this.abctReward + this.devoteReward
+      
+      this.yearRatio = (this.allReward/this.votepoolNumber) * 365 * 100
     },
     getPrice(){
       this.$common.getPrice().then( res =>{
