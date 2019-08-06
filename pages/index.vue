@@ -92,15 +92,15 @@
             </div>
             <div class="income-view">
               <p>预估贡献奖</p>  
-              <p>{{fixedNumber(devoteReward,5)+'\xa0'}} IOST/日</p>
+              <p>+ {{fixedNumber(devoteReward,5)+'\xa0'}} IOST/日</p>
             </div>
             <div class="income-view">
               <p>预估ABCT(兑换IOST)</p>  
-              <p>{{fixedNumber(abctReward,5)+'\xa0'}} IOST/日</p>
+              <p>+ {{fixedNumber(abctReward,5)+'\xa0'}} IOST/日</p>
             </div>
             <div class="income-view">
-              <p>预估总收益</p>  
-              <p>{{fixedNumber(allReward,5)+'\xa0'}} IOST/日</p>
+              <p>预估总收益</p>
+              <p>= {{fixedNumber(allReward,5)+'\xa0'}} IOST/日</p>
             </div>
             <div class="mb-2">
               <b-form-checkbox v-model="exchangeABCT" name="check-button" switch disabled>
@@ -205,7 +205,7 @@
       <div class="modal-input-view">
         <b-form-input v-model="unvotepoolNumber" placeholder="redeem number" type="number" autocomplete="off"></b-form-input>
         <b-input-group-append>
-          <div class="modal-input-append" @click="unvotepoolNumber = parseInt(accountPoolNumber)">全部</div>
+          <a class="modal-input-append" @click="unvotepoolNumber = parseInt(accountPoolNumber)">全部</a>
         </b-input-group-append>
       </div>
       <template slot="modal-footer" slot-scope="{cancel}">
