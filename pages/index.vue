@@ -83,7 +83,7 @@
               <p class="lable-text">参与额度</p>
               <b-form-input class="ml-1" focus type="number" autocomplete="off" size="sm" v-model="votepoolNumber" @update="poolChange()"></b-form-input>
               <b-input-group-append>
-                <div class="input-append">IOST <span class="ml-1" @click="votepoolNumber = parseInt(accountInfo.balance)">全部</span> </div>
+                <div class="input-append">IOST <span class="ml-1" @click="votepoolNumber = parseInt(accountInfo.balance);poolChange()">全部</span> </div>
               </b-input-group-append>
             </div>
             <div class="income-view">
@@ -686,7 +686,7 @@ export default {
       this.abctReward = abctnumber * this.priceInfo.price_ratio
 
       this.allReward = this.voteReward + this.abctReward + this.devoteReward
-      
+
       this.yearRatio = (this.allReward/this.votepoolNumber) * 365 * 100
     },
     getPrice(){

@@ -33,9 +33,9 @@
       <b-list-group v-if="type == 'income'">
         <b-list-group-item class="item"  v-for="(item,index) in incomeList" :key="index">
           <span>总收益：{{item.amount}}</span>
-          <span class="ml-2">投票收益：{{fixedNumber(item.dailyVoteAmount,4) }}</span>
-          <span class="ml-2">ABCT收益(兑换IOST)：{{fixedNumber(item.dailyExchangeAmount,4) }}</span>
-          <span class="ml-2">贡献收益：{{fixedNumber(item.quarterlyVoteAmount*1 + item.quarterlyContributionAmount*1 ,4)}}</span>
+          <span class="ml-2">投票收益：{{fixedNumber(item.dailyVoteAmount,5) }}</span>
+          <span class="ml-2">ABCT收益(兑换IOST)：{{fixedNumber(item.dailyExchangeAmount,5) }}</span>
+          <span class="ml-2">贡献收益：{{fixedNumber(item.quarterlyVoteAmount*1 + item.quarterlyContributionAmount*1 ,5)}}</span>
           <span class="ml-2">结算区块：{{item.block}}</span>
         </b-list-group-item>
       </b-list-group>
