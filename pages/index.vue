@@ -4,8 +4,8 @@
       <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
     </div>
     <div class="mt-2" @click="ruleModalLOL">
-      <img v-if="/cn/i.test(lang.lang)" style="width:100%;" src="~/assets/imgs/lol_zh.jpeg">
-      <img v-else style="width:100%;" src="~/assets/imgs/lol_en.jpeg">
+      <img v-if="/cn/i.test(lang.lang)" style="width:100%;border-radius:8px" src="~/assets/imgs/lol_zh.jpeg">
+      <img v-else style="width:100%;border-radius:8px" src="~/assets/imgs/lol_en.jpeg">
     </div>
     <div class="banner-bg mt-10">
       <div class="banner">
