@@ -3,6 +3,10 @@
     <div>
       <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
     </div>
+    <div class="mt-2" @click="ruleModalLOL">
+      <img v-if="/cn/i.test(lang.lang)" style="width:100%;" src="~/assets/imgs/lol_zh.jpeg">
+      <img v-else style="width:100%;" src="~/assets/imgs/lol_en.jpeg">
+    </div>
     <div class="banner-bg mt-10">
       <div class="banner">
         <div class="banner-content d-flex">
@@ -217,6 +221,15 @@ export default {
         }
         this.priceAnmate()
       })
+    },
+    ruleModalLOL(){
+      ga('send','event',{
+        eventCategory: `emogiBannerClick`,
+        eventAction: `emogiBannerClick`, 
+        eventLabel:`account:${this.walletAccount}`,
+        eventValue: 1 
+      })
+      this.ruleModal('emogi')
     },
     unvoteTip(data){
       if (data.message) {

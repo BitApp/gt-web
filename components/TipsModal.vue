@@ -26,6 +26,17 @@
           <p class="tips-info-text">2. 兑换得到的IOST即时到账。</p>
           <p class="tips-info-text">3. 完成兑换ABCT立即销毁。</p>
         </div>
+        <div v-if="type == 'emogi'">
+          <p class="tips-title fs-20 fb">IOSTABC将持续购入50万LOL表情币空投给ABCT持有者</p>
+          <p class="tips-info-text">为答谢广大投票用户对于IOSTABC的支持以及对ABCT的持有，IOSTABC将分五期，持续购入50万表情币，并连同官方持续空投的LOL表情币一起，空投给所有的ABCT持币用户</p>
+          <p class="tips-info-text"><span class="fb">每期空投数量 = </span><span>你的ABCT持仓 / ABCT总流通 * 当期空投总量</span></p>
+          <p class="tips-info-text"><span class="fb">空投日期：</span><span>第一期空投将于 2019年8月25日进行，空投总量为10万LOL表情币，我们将会在8月24日进行ABCT快照，并根据余额快照进行配发，届时大家可以下载PureWallet管理自己的LOL资产</span></p>
+          <p class="tips-info-text"><span class="fb">后续计划：</span><span>后续空投具体日期以公告为准，我们会不断把福利带给ABCT持币者</span></p>
+          <p class="tips-info-text"><span class="fb">LOL表情币：</span><span>LOL表情币将于2019年8月15日通过优选通道（Huobi Prime）上线火币交易所，限价期的两轮限定价格分别为：$0.000952, $0.001905</span></p>
+          <p class="tips-info-text"><span class="fb">LOL表情币：</span><span>LOL表情币将于2019年8月15日通过优选通道（Huobi Prime）上线火币交易所，限价期的两轮限定价格分别为：$0.000952, $0.001905</span></p>
+          <p class="tips-info-text">关于LOL表情币：<a href="https://media.weibo.cn/article?id=2309404403420126642222" rel="noopener noreferrer">https://media.weibo.cn/article?id=2309404403420126642222</a></p>
+          <p class="tips-info-text"><span class="fb">BISS投票：</span><span>在BISS上投票的用户因为暂时无法派发ABCT，所以将无法享受此次空投</span></p>
+        </div>
       </b-card-text>
     </b-card>
   </b-modal>
@@ -41,7 +52,8 @@ export default {
       titleOption:{
         abct:'什么是ABCT？',
         issue:'发行规则？',
-        exchange:'兑换规则'
+        exchange:'兑换规则',
+        emogi:'空投规则'
       },
       type:'abct',
       fields:[

@@ -1,16 +1,29 @@
 <template>
   <div>
-    <b-modal  ref="vote-modal" hide-footer class="modal">
+    <b-modal ref="vote-modal" hide-footer class="modal">
       <div class="nodata-view" v-if="voteList.length<1">
         暂无数据
       </div>
       <div v-else>
         <b-list-group >
           <b-list-group-item class="item" v-for="(item,index) in voteList" :key="index">
-            <span>节点：{{item.option}}</span> <span >票数：{{item.votes}}</span>  <div class="unvote-btn" @click="unVote(item)">取消投票</div>
+            <span>节点：{{item.option}}</span> <span >票数：{{item.votes}}</span>  <div class="unvote-btn" @click="selectNode(item)">取消投票</div>
           </b-list-group-item>
         </b-list-group>
       </div>
+    </b-modal>
+    <b-modal  ref="unvote-confim-modal" class="modal">
+      <div class="modal-text">
+        赎回的IOST7天之后才会到账，确定赎回吗?
+      </div>
+      <template slot="modal-footer" slot-scope="{cancel}">
+        <b-button size="sm" variant="info" @click="unVote()">
+          确定
+        </b-button>
+        <b-button size="sm" @click="cancel()">
+          取消
+        </b-button>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -23,6 +36,7 @@ export default {
     return{
       voteList:[],
       walletAccount:'',
+      selectItem:{},
       isshowModal:false,//避免弹框两次
     }
   },
@@ -41,8 +55,14 @@ export default {
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
-    unVote(item){
+    selectNode(item){
       this.$refs['vote-modal'].hide()
+      this.$refs['unvote-confim-modal'].show()
+      this.selectItem = item
+    },
+    unVote(){
+      let item = this.selectItem
+      this.$refs['unvote-confim-modal'].hide()
       this.isshowModal = false
       const iost = IWalletJS.newIOST(IOST)
       const ctx = iost.callABI('vote_producer.iost', "unvote", [this.walletAccount, item.option, item.votes.toString()])
@@ -93,6 +113,10 @@ export default {
 .modal{
   .nodata-view{
     text-align: center;
+    line-height: 30px;
+    color: #000;
+  }
+  .modal-text{
     line-height: 30px;
     color: #000;
   }
