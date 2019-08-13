@@ -39,8 +39,6 @@
           <br/>
           <p class="tips-info-text"><span class="fb">LOL表情币：</span><span>LOL表情币将于2019年8月15日通过优选通道（Huobi Prime）上线火币交易所，限价期的两轮限定价格分别为：$0.000952, $0.001905</span></p>
           <br/>
-          <p class="tips-info-text"><span class="fb">LOL表情币：</span><span>LOL表情币将于2019年8月15日通过优选通道（Huobi Prime）上线火币交易所，限价期的两轮限定价格分别为：$0.000952, $0.001905</span></p>
-          <br/>
           <p class="tips-info-text" v-if="/cn/i.test(lang.lang)">关于LOL表情币：<a href="https://media.weibo.cn/article?id=2309404403420126642222" rel="noopener noreferrer">https://media.weibo.cn/article?id=2309404403420126642222</a></p>
           <p class="tips-info-text" v-else>关于LOL表情币：<a href="https://medium.com/@IOSTABC/500k-lol-airdrop-to-abct-holders-5e5f877b0588" rel="noopener noreferrer">https://medium.com/@IOSTABC/500k-lol-airdrop-to-abct-holders-5e5f877b0588</a></p>
           <br/>
