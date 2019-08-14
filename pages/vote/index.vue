@@ -1,70 +1,72 @@
 <template>
-  <div class="vote-web-view">
-    <b-alert
-      :variant="variant"
-      fade
-      :show="dismissCountDown"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-    >
-      <div>{{alertText}}</div>
-      <div class="mt-2" v-if="faileddes != ''">
-        {{faileddes.message||faileddes}}
+  <div class="vote-body">
+    <div class="vote-web-view">
+      <b-alert
+        :variant="variant"
+        fade
+        :show="dismissCountDown"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged"
+      >
+        <div>{{alertText}}</div>
+        <div class="mt-2" v-if="faileddes != ''">
+          {{faileddes.message||faileddes}}
+        </div>
+      </b-alert>
+      <!-- <b-link to="/" style="color:#FF768A;">{{backStr}}</b-link> -->
+      <div class="mt-15 info-view">
+        <div class="info-line" @click="voteNumber = fixedNumber(accountInfo.balance,6)">我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
+        <div class="info-line">投票中的IOST：{{votebalances}}</div>
+        <div class="frozen-line">
+          <span>冻结中的IOST：{{frozenbalances}}</span>
+          <b-link style="color:#FF768A;" @click="unvoteModal">马上赎回</b-link>
+        </div>
       </div>
-    </b-alert>
-    <!-- <b-link to="/" style="color:#FF768A;">{{backStr}}</b-link> -->
-    <div class="mt-15 info-view">
-      <div class="info-line" @click="voteNumber = fixedNumber(accountInfo.balance,6)">我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
-      <div class="info-line">投票中的IOST：{{votebalances}}</div>
-      <div class="frozen-line">
-        <span>冻结中的IOST：{{frozenbalances}}</span>
-        <b-link style="color:#FF768A;" @click="unvoteModal">马上赎回</b-link>
+      <div class="exchange-info mt-20">
+        <div class="font-norwester fs-20 scale-title">1 ABCT = {{fixedNumber(price, 6)}} {{`${changeType=='ratio'?'IOST':/cn/i.test(lang.lang)?'CNY':'USD'}`}}
+          <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
+        </div>
+        <div class="scale-desc">投票给 IOSTABC 节点即可免费获得 ABCT</div>
+        <b-input-group>
+          <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" @update="inputChange" autocomplete="off"></b-form-input>
+          <b-input-group-append>
+            <div class="all-btn" @click="voteNumber = fixedNumber(accountInfo.balance,0);inputChange()">全部</div>
+          </b-input-group-append>
+        </b-input-group>
+        <div style="padding:10px">
+          <div class="scale-tip">当前IOSTABC总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给 IOSTABC，每天可分得 {{'\xa0'+fixedNumber(abctNumber,6) + '\xa0'}} ABCT </div> 
+          <div class="scale-tip mt-2 fb">{{fixedNumber(abctNumber,6) + '\xa0'}} ABCT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST = {{fixedNumber(priceNumber,6) + (/cn/i.test(lang.lang)?' CNY':' USD')}}</div>
+        </div>
       </div>
+      <div class="exchange-view">
+        <div class="icon-view">
+          <img class="icon-img" src="@/assets/imgs/icon_token.svg">
+          <img class="icon-to" src="@/assets/imgs/icon_to.svg">
+          <img class="icon-img" src="@/assets/imgs/icon_abc.svg">
+        </div>
+        <div class="vote-btn mt-20" @click="vote">马上投票抢 ABCT</div>
+        <div class="mt-10 history-tip" @click="historyModal('issue')">我的ABCT分红记录</div>
+        <div class="mt-10 exchange-tip"><span @click="ruleModal('abct')">什么是ABCT</span> <span @click="ruleModal('issue')">发行规则</span> <span @click="ruleModal('exchange')">兑换规则</span></div>
+      </div>
+      <HistoryModal ref="historyModal" />
+      <TipsModal ref="tipsModal" />
+      <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
+      <div class="mask-view" v-show="isloading">
+        <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
+      </div>
+      <b-modal ref="statusModal" >
+        <div style="color:#000;">{{modalText}}</div>
+        <div style="color:#721c24">{{txMessage}}</div>
+        <template slot="modal-footer" slot-scope="{cancel}">
+          <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
+            查看交易结果
+          </b-button>
+          <b-button size="sm" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
     </div>
-    <div class="exchange-info mt-20">
-      <div class="font-norwester fs-20 scale-title">1 ABCT = {{fixedNumber(price, 6)}} {{`${changeType=='ratio'?'IOST':/cn/i.test(lang.lang)?'CNY':'USD'}`}}
-        <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
-      </div>
-      <div class="scale-desc">投票给 IOSTABC 节点即可免费获得 ABCT</div>
-      <b-input-group>
-        <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" @update="inputChange" autocomplete="off"></b-form-input>
-        <b-input-group-append>
-          <div class="all-btn" @click="voteNumber = fixedNumber(accountInfo.balance,0);inputChange()">全部</div>
-        </b-input-group-append>
-      </b-input-group>
-      <div style="padding:10px">
-        <div class="scale-tip">当前IOSTABC总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给 IOSTABC，每天可分得 {{'\xa0'+fixedNumber(abctNumber,6) + '\xa0'}} ABCT </div> 
-        <div class="scale-tip mt-2 fb">{{fixedNumber(abctNumber,6) + '\xa0'}} ABCT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST = {{fixedNumber(priceNumber,6) + (/cn/i.test(lang.lang)?' CNY':' USD')}}</div>
-      </div>
-    </div>
-    <div class="exchange-view">
-      <div class="icon-view">
-        <img class="icon-img" src="@/assets/imgs/icon_token.svg">
-        <img class="icon-to" src="@/assets/imgs/icon_to.svg">
-        <img class="icon-img" src="@/assets/imgs/icon_abc.svg">
-      </div>
-      <div class="vote-btn mt-20" @click="vote">马上投票抢 ABCT</div>
-      <div class="mt-10 history-tip" @click="historyModal('issue')">我的ABCT分红记录</div>
-      <div class="mt-10 exchange-tip"><span @click="ruleModal('abct')">什么是ABCT</span> <span @click="ruleModal('issue')">发行规则</span> <span @click="ruleModal('exchange')">兑换规则</span></div>
-    </div>
-    <HistoryModal ref="historyModal" />
-    <TipsModal ref="tipsModal" />
-    <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
-    <div class="mask-view" v-show="isloading">
-      <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
-    </div>
-    <b-modal ref="statusModal" >
-      <div style="color:#000;">{{modalText}}</div>
-      <div style="color:#721c24">{{txMessage}}</div>
-      <template slot="modal-footer" slot-scope="{cancel}">
-        <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
-          查看交易结果
-        </b-button>
-        <b-button size="sm" @click="cancel()">
-          Cancel
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 <script>
@@ -332,6 +334,10 @@ export default {
   .form-control:focus{
     box-shadow: none;
   }
+}
+.vote-body{
+  padding: 0 calc(50% - 280px);
+  min-width: 350px;
 }
 .vote-web-view{
   padding: 15px;

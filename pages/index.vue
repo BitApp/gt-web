@@ -1,106 +1,109 @@
 <template>
-  <div class="abct-web-index">
-    <div>
-      <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
-    </div>
-    <div class="mt-2" @click="ruleModalLOL">
-      <img v-if="/cn/i.test(lang.lang)" style="width:100%;border-radius:8px" src="~/assets/imgs/lol_zh.jpeg">
-      <img v-else style="width:100%;border-radius:8px" src="~/assets/imgs/lol_en.jpeg">
-    </div>
-    <div class="banner-bg mt-10">
-      <div class="banner">
-        <div class="banner-content d-flex">
-          <img class="icon-abct" src="~/assets/imgs/icon_abct.svg" width="75">
-          <div class="banner-content-right">
-            <div>
-              <span @click="ruleModal('abct')">什么是ABCT ></span>
-            </div>
-            <div class="mt-8">
-              <!-- fixedNumber(price,6) -->
-              <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
-              <no-ssr>
-                <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
-              </no-ssr>
-            </div>
-            <div class="mt-8">
-              <!-- <span class="fs-14" to="/">当日涨幅：<DiffLabel slot="activator" :diff="priceInfo.percent_change_24h" :formatter="(text) => fixedNumber(text,2) + '%'" tag="sup" class="fz-12" /></span> -->
-              <!-- <span class="ml-5">|</span> -->
-              <span class="fs-14" to="/">涨幅：<DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
+  <div class="abct-body">
+    <div class="abct-web-index">
+      
+      <div>
+        <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
+      </div>
+      <div class="mt-2" @click="ruleModalLOL">
+        <img v-if="/cn/i.test(lang.lang)" style="width:100%;border-radius:8px" src="~/assets/imgs/lol_zh.jpeg">
+        <img v-else style="width:100%;border-radius:8px" src="~/assets/imgs/lol_en.jpeg">
+      </div>
+      <div class="banner-bg mt-10">
+        <div class="banner">
+          <div class="banner-content d-flex">
+            <img class="icon-abct" src="~/assets/imgs/icon_abct.svg" width="75">
+            <div class="banner-content-right">
+              <div>
+                <span @click="ruleModal('abct')">什么是ABCT ></span>
+              </div>
+              <div class="mt-8">
+                <!-- fixedNumber(price,6) -->
+                <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
+                <no-ssr>
+                  <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
+                </no-ssr>
+              </div>
+              <div class="mt-8">
+                <!-- <span class="fs-14" to="/">当日涨幅：<DiffLabel slot="activator" :diff="priceInfo.percent_change_24h" :formatter="(text) => fixedNumber(text,2) + '%'" tag="sup" class="fz-12" /></span> -->
+                <!-- <span class="ml-5">|</span> -->
+                <span class="fs-14" to="/">涨幅：<DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="records mt-15" style="overflow:hidden">
-      <div v-if="historyInfo" :class="['animated', historyDirect ==='in'?'slideInUp':'slideOutUp', 'infinite', 'slow']">
-        {{historyInfo.name + '\xa0'}} 刚刚获得了 {{ '\xa0'+fixedNumber(historyInfo.amount,4) + '\xa0'}} ABCT 
+      <div class="records mt-15" style="overflow:hidden">
+        <div v-if="historyInfo" :class="['animated', historyDirect ==='in'?'slideInUp':'slideOutUp', 'infinite', 'slow']">
+          {{historyInfo.name + '\xa0'}} 刚刚获得了 {{ '\xa0'+fixedNumber(historyInfo.amount,4) + '\xa0'}} ABCT 
+        </div>
       </div>
-    </div>
-    <div class="vote mt-15">
-      <div class="vote-content d-flex">
-        <div class="w100p">
-          <div>我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
-          <div class="on-voting d-flex mt-2">
-            <span>投票中的IOST：{{votebalances}}</span>
-          </div>
-          <div class="frozen-line mt-2">
-              <span>冻结中的IOST：{{frozenbalances}}</span>
-              <b-link style="color:#FF768A;" @click="unvoteModal()">马上赎回</b-link>
+      <div class="vote mt-15">
+        <div class="vote-content d-flex">
+          <div class="w100p">
+            <div>我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
+            <div class="on-voting d-flex mt-2">
+              <span>投票中的IOST：{{votebalances}}</span>
             </div>
+            <div class="frozen-line mt-2">
+                <span>冻结中的IOST：{{frozenbalances}}</span>
+                <b-link style="color:#FF768A;" @click="unvoteModal()">马上赎回</b-link>
+              </div>
+          </div>
+        </div>
+        <div class="vote-btn mt-20" @click="toRoute('vote')">投票免费抢</div>
+        <div class="tips-view mt-15">
+          <span @click="historyModal('issue')">我的分红记录</span>
+          <span @click="ruleModal('issue')">发行规则</span>
         </div>
       </div>
-      <div class="vote-btn mt-20" @click="toRoute('vote')">投票免费抢</div>
-      <div class="tips-view mt-15">
-        <span @click="historyModal('issue')">我的分红记录</span>
-        <span @click="ruleModal('issue')">发行规则</span>
-      </div>
-    </div>
-    <div class="exchange mt-20">
-      <div class="exchange-tip">
-        <div class="abct-text fb">我的ABCT：{{tokenbalance}}</div>
-        <div class="fb">
-          <div>1 ABCT = {{ '\xa0'+fixedNumber(priceInfo.price_ratio,6)+'\xa0'}}IOST  = {{/cn/i.test(lang.lang)?(fixedNumber(priceInfo.price_cny,6) +'\xa0'+'CNY'):(fixedNumber(priceInfo.price_usd,6)+'\xa0'+'USD')}} </div>
+      <div class="exchange mt-20">
+        <div class="exchange-tip">
+          <div class="abct-text fb">我的ABCT：{{tokenbalance}}</div>
+          <div class="fb">
+            <div>1 ABCT = {{ '\xa0'+fixedNumber(priceInfo.price_ratio,6)+'\xa0'}}IOST  = {{/cn/i.test(lang.lang)?(fixedNumber(priceInfo.price_cny,6) +'\xa0'+'CNY'):(fixedNumber(priceInfo.price_usd,6)+'\xa0'+'USD')}} </div>
+          </div>
+          <div class="exchange-pool mt-15">
+            <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
+            <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
+          </div>
+          <div class="exchange-pool mt-15">
+            <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
+          </div>
         </div>
-        <div class="exchange-pool mt-15">
-          <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
-          <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
+        <div class="tips-view mt-15" @click="historyModal('recharge')">资金池充值记录</div>
+        <div class="exchange-btn mt-20" @click="toRoute('exchange')" >兑换IOST</div>
+        <div class="tips-view mt-15">
+          <span @click="historyModal('exchange')">我的兑换记录</span>
+          <span @click="ruleModal('exchange')">兑换规则</span>
         </div>
-        <div class="exchange-pool mt-15">
-          <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
+      </div>
+      <div class="tip-view mt-15" v-if="(ref != 'purewallet' && ref != 'tp')">
+        <img v-if="/cn/i.test(this.lang.lang)" class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_cn.png">
+        <img v-else class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_en.png">
+        <div class="qrcode">
+          <div class="code-img"><img src="~/assets/imgs/download.svg" alt=""></div>
+          <div class="mt-15">扫码下载PureWallet，随时管理你的ABCT收益</div>
         </div>
       </div>
-      <div class="tips-view mt-15" @click="historyModal('recharge')">资金池充值记录</div>
-      <div class="exchange-btn mt-20" @click="toRoute('exchange')" >兑换IOST</div>
-      <div class="tips-view mt-15">
-        <span @click="historyModal('exchange')">我的兑换记录</span>
-        <span @click="ruleModal('exchange')">兑换规则</span>
+      <HistoryModal ref="historyModal" />
+      <TipsModal ref="tipsModal" />
+      <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
+      <div class="mask-view" v-show="isloading">
+        <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
       </div>
+      <b-modal ref="statusModal">
+        <div style="color:#000;">{{modalText}}</div>
+        <template slot="modal-footer" slot-scope="{cancel}">
+          <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
+            查看交易结果
+          </b-button>
+          <b-button size="sm" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
     </div>
-    <div class="tip-view mt-15" v-if="(ref != 'purewallet' && ref != 'tp')">
-      <img v-if="/cn/i.test(this.lang.lang)" class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_cn.png">
-      <img v-else class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_en.png">
-      <div class="qrcode">
-        <div class="code-img"><img src="~/assets/imgs/download.svg" alt=""></div>
-        <div class="mt-15">扫码下载PureWallet，随时管理你的ABCT收益</div>
-      </div>
-    </div>
-    <HistoryModal ref="historyModal" />
-    <TipsModal ref="tipsModal" />
-    <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
-    <div class="mask-view" v-show="isloading">
-      <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
-    </div>
-    <b-modal ref="statusModal">
-      <div style="color:#000;">{{modalText}}</div>
-      <template slot="modal-footer" slot-scope="{cancel}">
-        <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
-          查看交易结果
-        </b-button>
-        <b-button size="sm" @click="cancel()">
-          Cancel
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 <script>
@@ -375,6 +378,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.abct-body{
+  padding: 0 calc(50% - 280px);
+  min-width: 350px;
+}
 .abct-web-index {
   padding: 15px;
   .mt-8 {

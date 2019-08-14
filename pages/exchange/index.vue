@@ -1,62 +1,64 @@
 <template>
-  <div class="exchange-web-view">
-    <b-alert
-      :variant="variant"
-      fade
-      :show="dismissCountDown"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-    >
-      <div>{{alertText}}</div>
-      <div class="mt-2" v-if="faileddes != ''">
-        {{faileddes.message||faileddes}}
-      </div>
-    </b-alert>
-    <!-- <b-link to="/" style="color:#FF768A;">{{backStr}}</b-link> -->
-    <div class="mt-15 info-view">
-      <img class="icon-img" src="@/assets/imgs/icon_abc.svg">
-      <div class="ml-5 abct-balance">
-        <div @click="exchangeNumber = tokenbalance;">我的ABCT：{{tokenbalance}}</div>
-      </div>
-    </div>
-    <div class="exchange-info mt-20">
-      <div class="font-norwester fs-20 scale-title">1 ABCT = {{fixedNumber(price, 6)}} {{`${changeType=='ratio'?'IOST':/cn/i.test(lang.lang)?'CNY':'USD'}`}}
-        <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
-      </div>
-      <div class="scale-desc" v-if="ref == 'purewallet'">你可以在任何时间选择把 ABCT 兑换为IOST我们只收取0.5%的手续费</div>
-      <div class="scale-desc" v-else>你可以在任何时间选择把 ABCT 兑换为IOST我们只收取1%的手续费</div>
-      <b-input-group>
-        <b-form-input focus type="number" v-model="exchangeNumber" placeholder="请输入兑换数量" autocomplete="off" @update="inputChange"></b-form-input>
-        <b-input-group-append>
-          <div class="all-btn" @click="exchangeNumber = tokenbalance;inputChange()" >全部</div>
-        </b-input-group-append>
-      </b-input-group>
-      <div class="scale-tip">{{exchangeNumber || 0}} ABCT = {{fixedNumber(exchangeNumber * priceInfo.price_ratio, 6)}} IOST = {{ priceNumber + (/cn/i.test(lang.lang)?" CNY":" USD") }}</div>
-    </div>
-    <div class="exchange-view">
-      <div class="icon-view">
+  <div class="exchange-body">
+    <div class="exchange-web-view">
+      <b-alert
+        :variant="variant"
+        fade
+        :show="dismissCountDown"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged"
+      >
+        <div>{{alertText}}</div>
+        <div class="mt-2" v-if="faileddes != ''">
+          {{faileddes.message||faileddes}}
+        </div>
+      </b-alert>
+      <!-- <b-link to="/" style="color:#FF768A;">{{backStr}}</b-link> -->
+      <div class="mt-15 info-view">
         <img class="icon-img" src="@/assets/imgs/icon_abc.svg">
-        <img class="icon-to" src="@/assets/imgs/icon_to.svg">
-        <img class="icon-img" src="@/assets/imgs/icon_iost.svg">
+        <div class="ml-5 abct-balance">
+          <div @click="exchangeNumber = tokenbalance;">我的ABCT：{{tokenbalance}}</div>
+        </div>
       </div>
-      <div class="exchange-btn mt-20" @click="exchange">兑换 IOST</div>
-      <div class="mt-10 history-tip" @click="historyModal('exchange')">我的兑换记录</div>
-      <div class="mt-10 exchange-tip"><span @click="ruleModal('abct')">什么是ABCT</span> <span @click="ruleModal('issue')">发行规则</span> <span @click="ruleModal('exchange')">兑换规则</span></div>
+      <div class="exchange-info mt-20">
+        <div class="font-norwester fs-20 scale-title">1 ABCT = {{fixedNumber(price, 6)}} {{`${changeType=='ratio'?'IOST':/cn/i.test(lang.lang)?'CNY':'USD'}`}}
+          <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
+        </div>
+        <div class="scale-desc" v-if="ref == 'purewallet'">你可以在任何时间选择把 ABCT 兑换为IOST我们只收取0.5%的手续费</div>
+        <div class="scale-desc" v-else>你可以在任何时间选择把 ABCT 兑换为IOST我们只收取1%的手续费</div>
+        <b-input-group>
+          <b-form-input focus type="number" v-model="exchangeNumber" placeholder="请输入兑换数量" autocomplete="off" @update="inputChange"></b-form-input>
+          <b-input-group-append>
+            <div class="all-btn" @click="exchangeNumber = tokenbalance;inputChange()" >全部</div>
+          </b-input-group-append>
+        </b-input-group>
+        <div class="scale-tip">{{exchangeNumber || 0}} ABCT = {{fixedNumber(exchangeNumber * priceInfo.price_ratio, 6)}} IOST = {{ priceNumber + (/cn/i.test(lang.lang)?" CNY":" USD") }}</div>
+      </div>
+      <div class="exchange-view">
+        <div class="icon-view">
+          <img class="icon-img" src="@/assets/imgs/icon_abc.svg">
+          <img class="icon-to" src="@/assets/imgs/icon_to.svg">
+          <img class="icon-img" src="@/assets/imgs/icon_iost.svg">
+        </div>
+        <div class="exchange-btn mt-20" @click="exchange">兑换 IOST</div>
+        <div class="mt-10 history-tip" @click="historyModal('exchange')">我的兑换记录</div>
+        <div class="mt-10 exchange-tip"><span @click="ruleModal('abct')">什么是ABCT</span> <span @click="ruleModal('issue')">发行规则</span> <span @click="ruleModal('exchange')">兑换规则</span></div>
+      </div>
+      <HistoryModal ref="historyModal" />
+      <TipsModal ref="tipsModal" />
+      <b-modal  ref="statusModal" >
+        <div style="color:#000;">{{modalText}}</div>
+        <div style="color:#721c24">{{txMessage}}</div>
+        <template slot="modal-footer" slot-scope="{cancel}">
+          <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
+            查看交易结果
+          </b-button>
+          <b-button size="sm" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
     </div>
-    <HistoryModal ref="historyModal" />
-    <TipsModal ref="tipsModal" />
-    <b-modal  ref="statusModal" >
-      <div style="color:#000;">{{modalText}}</div>
-      <div style="color:#721c24">{{txMessage}}</div>
-      <template slot="modal-footer" slot-scope="{cancel}">
-        <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
-          查看交易结果
-        </b-button>
-        <b-button size="sm" @click="cancel()">
-          Cancel
-        </b-button>
-      </template>
-    </b-modal>
   </div>
 </template>
 <script>
@@ -295,6 +297,10 @@ export default {
   .form-control:focus{
     box-shadow: none;
   }
+}
+.exchange-body{
+  padding: 0 calc(50% - 280px);
+  min-width: 350px;
 }
 .exchange-web-view{
   padding: 15px;
