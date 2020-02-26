@@ -1,4 +1,4 @@
-# abct-web
+# gt-web
 
 > My doozie Nuxt.js project
 

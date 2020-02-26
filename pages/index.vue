@@ -1,7 +1,6 @@
 <template>
-  <div class="abct-body">
-    <div class="abct-web-index">
-      
+  <div class="gt-body">
+    <div class="gt-web-index">
       <div>
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
       </div>
@@ -378,11 +377,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.abct-body{
+.gt-body{
   padding: 0 calc(50% - 280px);
   min-width: 350px;
 }
-.abct-web-index {
+.gt-web-index {
   padding: 15px;
   .mt-8 {
     margin-top: 8px;
