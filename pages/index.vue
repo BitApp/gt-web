@@ -4,85 +4,49 @@
       <div>
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
       </div>
-      <div class="mt-2" @click="ruleModalLOL">
-        <img v-if="/cn/i.test(lang.lang)" style="width:100%;border-radius:8px" src="~/assets/imgs/lol_zh.jpeg">
-        <img v-else style="width:100%;border-radius:8px" src="~/assets/imgs/lol_en.jpeg">
-      </div>
       <div class="banner-bg mt-10">
         <div class="banner">
+          <div class="title">清风链游戏公益积分 GT（GUILD_TOKEN)</div>
           <div class="banner-content d-flex">
-            <img class="icon-abct" src="~/assets/imgs/icon_abct.svg" width="75">
-            <div class="banner-content-right">
-              <div>
-                <span @click="ruleModal('abct')">什么是ABCT ></span>
-              </div>
+            <div class="banner-content-left">
               <div class="mt-8">
-                <!-- fixedNumber(price,6) -->
-                <img class="switch" src="~/assets/imgs/icon_switch.svg" @click="priceChange" width="15">
-                <no-ssr>
-                  <span :class="[`font-norwester ml-1 ${font_size}`]" >1 ABCT = <div id="price"></div>{{`${changeType=='ratio'?' IOST':/cn/i.test(lang.lang)?' CNY':' USD'}`}}</span>
-                </no-ssr>
-              </div>
-              <div class="mt-8">
-                <!-- <span class="fs-14" to="/">当日涨幅：<DiffLabel slot="activator" :diff="priceInfo.percent_change_24h" :formatter="(text) => fixedNumber(text,2) + '%'" tag="sup" class="fz-12" /></span> -->
-                <!-- <span class="ml-5">|</span> -->
-                <span class="fs-14" to="/">涨幅：<DiffLabel slot="activator" :diff="changeType=='ratio'?priceInfo.percent_change_ratio:priceInfo.percent_change_price" :formatter="(text) => fixedNumber(text * 100,2) + '%'" tag="sup" class="fz-12" /></span>
+                <div>1. 总量 21亿 / 2. 超级回购计划</div>
+                <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
+                <div>5. 积分商城即将上线</div>
               </div>
             </div>
+            <img class="icon-gt" src="~/assets/imgs/icon_gt.svg" width="75">
           </div>
         </div>
       </div>
-      <div class="records mt-15" style="overflow:hidden">
-        <div v-if="historyInfo" :class="['animated', historyDirect ==='in'?'slideInUp':'slideOutUp', 'infinite', 'slow']">
-          {{historyInfo.name + '\xa0'}} 刚刚获得了 {{ '\xa0'+fixedNumber(historyInfo.amount,4) + '\xa0'}} ABCT 
-        </div>
-      </div>
-      <div class="vote mt-15">
-        <div class="vote-content d-flex">
-          <div class="w100p">
-            <div>我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
-            <div class="on-voting d-flex mt-2">
-              <span>投票中的IOST：{{votebalances}}</span>
-            </div>
-            <div class="frozen-line mt-2">
-                <span>冻结中的IOST：{{frozenbalances}}</span>
-                <b-link style="color:#FF768A;" @click="unvoteModal()">马上赎回</b-link>
-              </div>
-          </div>
-        </div>
-        <div class="vote-btn mt-20" @click="toRoute('vote')">投票免费抢</div>
-        <div class="tips-view mt-15">
-          <span @click="historyModal('issue')">我的分红记录</span>
-          <span @click="ruleModal('issue')">发行规则</span>
+      <div class="countdown mt-15">
+        <div class="countdown-content d-flex">
+          <div>减半倒计时：</div>
+          <div class="number">06天20小时30分10秒</div>
         </div>
       </div>
       <div class="exchange mt-20">
         <div class="exchange-tip">
-          <div class="abct-text fb">我的ABCT：{{tokenbalance}}</div>
-          <div class="fb">
-            <div>1 ABCT = {{ '\xa0'+fixedNumber(priceInfo.price_ratio,6)+'\xa0'}}IOST  = {{/cn/i.test(lang.lang)?(fixedNumber(priceInfo.price_cny,6) +'\xa0'+'CNY'):(fixedNumber(priceInfo.price_usd,6)+'\xa0'+'USD')}} </div>
+          <div class="abct-text fb">我的GT：{{tokenbalance}}</div>
+          <div class="exchange-pool">
+            <b-input-group>
+              <b-form-input focus type="number" v-model="exchangeNumber" placeholder="请输入兑换数量" autocomplete="off"></b-form-input>
+              <b-input-group-text><strong>0.066 IOST / GT</strong></b-input-group-text>
+            </b-input-group>
+            <div class="mt-20">
+              <b-btn block size="lg" variant="primary">兑换</b-btn>
+            </div>
+            <div class="mt-15 ta">
+              <a>查看兑换记录 ></a>
+            </div>
           </div>
           <div class="exchange-pool mt-15">
             <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
             <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
           </div>
           <div class="exchange-pool mt-15">
-            <span>总兑换/销毁：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 ABCT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
+            <span>总兑换：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
           </div>
-        </div>
-        <div class="tips-view mt-15" @click="historyModal('recharge')">资金池充值记录</div>
-        <div class="exchange-btn mt-20" @click="toRoute('exchange')" >兑换IOST</div>
-        <div class="tips-view mt-15">
-          <span @click="historyModal('exchange')">我的兑换记录</span>
-          <span @click="ruleModal('exchange')">兑换规则</span>
-        </div>
-      </div>
-      <div class="tip-view mt-15" v-if="(ref != 'purewallet' && ref != 'tp')">
-        <img v-if="/cn/i.test(this.lang.lang)" class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_cn.png">
-        <img v-else class="wallet-img" style="width:200px;height:400px" src="~/assets/imgs/wallet_en.png">
-        <div class="qrcode">
-          <div class="code-img"><img src="~/assets/imgs/download.svg" alt=""></div>
-          <div class="mt-15">扫码下载PureWallet，随时管理你的ABCT收益</div>
         </div>
       </div>
       <HistoryModal ref="historyModal" />
@@ -160,7 +124,7 @@ export default {
   },
   head() {
     return {
-      title: 'ABCT',
+      title: 'GUILD_TOKEN',
       ip: null,
     }
   },
@@ -221,7 +185,6 @@ export default {
           this.startPrice = this.priceInfo.price_ratio_10m_ago + this.priceTimePercent * (this.priceInfo.price_ratio - this.priceInfo.price_ratio_10m_ago)
           this.endPrice = this.priceInfo.price_ratio
         }
-        this.priceAnmate()
       })
     },
     ruleModalLOL(){
@@ -254,20 +217,6 @@ export default {
         this.getPrice()
       },610 * 1000)
     },
-    priceAnmate(){
-      const options = {
-        startVal: this.fixedNumber(this.startPrice ,10),
-        decimalPlaces: 10,
-        useEasing: false,
-        duration: 610 * (1 - this.priceTimePercent),
-      };
-      let countdown = new CountUp('price', this.fixedNumber(this.endPrice ,10), options)
-      if (!countdown.error) {
-        countdown.start()
-      } else {
-        console.error(countdown.error);
-      }
-    },
     priceChange(){
       this.priceTimePercent = (+new Date() -  new Date(this.priceInfo.created_at)) / (600 * 1000)
       if (this.changeType == 'ratio') {
@@ -284,7 +233,6 @@ export default {
         this.endPrice = this.priceInfo.price_ratio
         this.changeType = 'ratio'
       }
-      this.priceAnmate()
     },
     onReady(instance, CountUp) {
       const that = this
@@ -380,116 +328,98 @@ export default {
 .gt-body{
   padding: 0 calc(50% - 280px);
   min-width: 350px;
-}
-.gt-web-index {
-  padding: 15px;
-  .mt-8 {
-    margin-top: 8px;
-  }
-  .banner-bg {
-    background: url(~assets/imgs/abct_bg@2x.png) 0 0 no-repeat #1f166b;
-    background-size: cover;
-    height: 157px;
-    border-radius: 8px;
+  font-size: 16px;
+  .gt-web-index {
+    padding: 30px;
+    
+    .mt-8 {
+      margin-top: 8px;
+    }
     // box-shadow: #111 1px 1px 0;
     .banner{
-      a{
-        color:white;
-        opacity: 0.7;
-      }
-      padding: 6px;
-      height: 151px;
       border-radius: 8px;
-      background: transparent;
-      .icon-abct{
-        border-radius: 50px;
-        box-shadow:#222 0 0 4px;
+      background: #2A3657;
+      .title {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        background: #39AFFF;
+        color:white;
+        padding: 16px;
+        border-radius: 8px;
       }
       .banner-content {
+        padding: 20px;
         align-items: center;
         height: 100%;
-        .banner-content-right{
+        .banner-content-left{
           margin-left:12px;
           flex: 1;
-          #price{
-            text-align: left;
-            display: inline-block;
-          }
-          .rising {
-            color: #0DB767;
-          }
         }
       }
     }
-  }
-  .records {
-    text-align: center;
-    color: #eee;
-    animation-duration: 2.01s;
-    animation-iteration-count: infinite;
-  }
-  .vote {
-    a{
-      color:#FF768A;
-    }
-    .vote-content {
-      padding:15px 15px;
-      align-items: center;
-      background: #1F166B;
-      border-radius: 8px;
-      .on-voting {
-        justify-content: space-between;
+    .countdown {
+      a {
+        color:#39AFFF;
       }
-      .frozen-line{
-        display: flex;
+      .countdown-content {
+        padding: 20px;
+        align-items: center;
+        background: #2A3657;
+        border-radius: 8px;
         justify-content: space-between;
+        .number {
+          font-weight: bold;
+          color: #39AFFF;
+        }
       }
     }
-  }
-  .tip-view {
-    display: flex;
-    .qrcode{
-      flex: 1;
-      padding: 10px;
+    .tip-view {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      .code-img{
-        text-align: left;
-      }
-    }
-  }
-  .tips-view{
-    display: flex;
-    justify-content: space-between;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .exchange{
-    .exchange-tip{
-      padding: 15px;
-      background-color:#1F166B;
-      .exchange-pool{
-        .icon_largerise{
-          height: 11px;
+      .qrcode{
+        flex: 1;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        .code-img{
+          text-align: left;
         }
-        border-top: 1px solid #322886;
-        padding-top: 10px;
-      }
-      .abct-text{
-        line-height: 30px;
       }
     }
-  }
-  .mask-view{
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .tips-view{
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .exchange{
+      .exchange-tip{
+        padding: 20px;
+        border-radius: 8px;
+        background-color:#2A3657;
+        .exchange-pool{
+          .icon_largerise{
+            height: 11px;
+          }
+          border-top: 1px solid rgb(63, 80, 126);
+          padding-top: 10px;
+        }
+        .abct-text{
+          line-height: 30px;
+        }
+      }
+    }
+    .mask-view{
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 </style>
