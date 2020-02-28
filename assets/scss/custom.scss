@@ -112,3 +112,22 @@
   width: 90%;
   max-width: 520px;
 }
+
+.form-control  {
+  color: white;
+  background-color: #181F3A;
+  border: 1px solid #181F3A;
+  &:active,&:focus {
+    color: #39AFFF;
+    background-color: #181F3A;
+    border: 1px solid #39AFFF;
+  }
+}
+.input-group-text {
+  background-color: #181F3A;
+  border: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  color: white;
+  font-size: 12px;
+}

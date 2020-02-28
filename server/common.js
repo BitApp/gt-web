@@ -21,7 +21,7 @@ export default function API(axios) {
       return axios.get(`${apiUrl}/totaldestroy`)
     },
     getTokenBalcnce (id) {
-      return axios.get(`/getTokenBalance/${id}/abct/1`)
+      return axios.get(`/getTokenBalance/${id}/myt/1`)
     },
     getProducerInfo (producer) {
       return axios.get(`${iosturl}/producer/${producer}`)

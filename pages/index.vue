@@ -27,7 +27,14 @@
       </div>
       <div class="exchange mt-20">
         <div class="exchange-tip">
-          <div class="abct-text fb">我的GT：{{tokenbalance}}</div>
+          <div class="abct-text d-flex">
+            <div class="fb">
+              我的GT：{{tokenbalance}}
+            </div>
+            <div>
+              <b-btn variant="link" size="sm" @click="exchangeNumber = tokenbalance">全部</b-btn>
+            </div>
+          </div>
           <div class="exchange-pool">
             <b-input-group>
               <b-form-input focus type="number" v-model="exchangeNumber" placeholder="请输入兑换数量" autocomplete="off"></b-form-input>
@@ -108,8 +115,8 @@ export default {
       endPrice:'',
       totaldestroy:'',
       priceTimePercent:0,
-      font_size:'fs-20',
       changeType:'ratio',
+      exchangeNumber: 0, 
       isloading: false,
       txhash:'',
       modalText:'',
@@ -142,15 +149,6 @@ export default {
     //价格
     this.getPriceDown()
     this.getObtainHistory()
-    if (/ios|ipad|iphone/i.test(navigator.userAgent)) {
-      if (window.innerWidth < 400){
-        this.font_size = 'fs-18'
-      }
-    } else {
-      if (window.innerWidth < 400) {
-        this.font_size = 'fs-17'
-      }
-    }
     this.ref = this.$route.query.ref || window.sessionStorage.getItem('ref') || ''
     window.sessionStorage.setItem('ref',this.ref)
     this.language = /cn/i.test(this.lang.lang)? 'zh_Hans_CN':/en/i.test(this.lang.lang)?'en_US':'zh_Hant_HK'
@@ -187,15 +185,7 @@ export default {
         }
       })
     },
-    ruleModalLOL(){
-      ga('send','event',{
-        eventCategory: `emogiBannerClick`,
-        eventAction: `emogiBannerClick`, 
-        eventLabel:`account:${this.walletAccount}`,
-        eventValue: 1 
-      })
-      this.ruleModal('emogi')
-    },
+
     unvoteTip(data){
       if (data.message) {
         this.txMessage = data.message
@@ -328,9 +318,9 @@ export default {
 .gt-body{
   padding: 0 calc(50% - 280px);
   min-width: 350px;
-  font-size: 16px;
+  font-size: 14px;
   .gt-web-index {
-    padding: 30px;
+    padding: 30px 20px;
     
     .mt-8 {
       margin-top: 8px;
@@ -341,15 +331,15 @@ export default {
       background: #2A3657;
       .title {
         text-align: center;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: bold;
         background: #39AFFF;
         color:white;
-        padding: 16px;
+        padding: 10px;
         border-radius: 8px;
       }
       .banner-content {
-        padding: 20px;
+        padding: 10px;
         align-items: center;
         height: 100%;
         .banner-content-left{
@@ -405,7 +395,8 @@ export default {
           padding-top: 10px;
         }
         .abct-text{
-          line-height: 30px;
+          justify-content: space-between;
+          align-items: center;
         }
       }
     }
