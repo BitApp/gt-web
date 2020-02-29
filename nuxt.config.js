@@ -43,7 +43,7 @@ module.exports = {
     '~/plugins/utils',
     { src: "~/plugins/i18n"},
     {src:'~/plugins/service', ssr:true},
-    // { src: "~/plugins/exchangeAxios"},
+    { src: "~/plugins/countdown", ssr: false},
     // { src: "~/plugins/awsome", ssr: false },
     { src: "~/plugins/ga", ssr: false}
   ],

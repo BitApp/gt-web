@@ -22,7 +22,11 @@
       <div class="countdown mt-15">
         <div class="countdown-content d-flex">
           <div>减半倒计时：</div>
-          <div class="number">06天20小时30分10秒</div>
+          <div class="number">
+            <countdown :time="(nextHalve-currentBlock) * 500">
+              <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
+            </countdown>
+          </div>
         </div>
       </div>
       <div class="exchange mt-20">
@@ -52,13 +56,12 @@
             <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
           </div>
           <div class="exchange-pool mt-15">
-            <span>总兑换：{{fixedNumber(totaldestroy.total_destroy,2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totaldestroy.total_destroy*priceInfo.price_ratio,2) + '\xa0 IOST'}}  </span>
+            <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * 0.066,2) + '\xa0 IOST'}}  </span>
           </div>
         </div>
       </div>
       <HistoryModal ref="historyModal" />
       <TipsModal ref="tipsModal" />
-      <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
       <div class="mask-view" v-show="isloading">
         <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
       </div>
@@ -80,19 +83,18 @@
 import Vue from "vue"
 import DiffLabel from '~/components/DiffLabel.vue'
 import HistoryModal from '~/components/HistoryModal.vue'
+import VueCountdown from '@chenfengyuan/vue-countdown'
 import TipsModal from '~/components/TipsModal.vue'
-import UnVoteModal from '~/components/UnVoteModal.vue'
-import { CountUp } from 'countup.js/dist/countUp';
+// import UnVoteModal from '~/components/UnVoteModal.vue'
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
-
 
 export default {
   components: {
     DiffLabel,
     TipsModal,
     HistoryModal,
-    UnVoteModal
+    VueCountdown
   },
   computed:{
     ...mapState(["lang"]),
@@ -121,6 +123,10 @@ export default {
       txhash:'',
       modalText:'',
       language:'zh_Hans_CN',
+
+      currentBlock: 0,
+      nextHalve: 0,
+      totalExchange: 0,
       ref:'',
       langs:[
         {value:"en_US",text:'English'},
@@ -141,10 +147,7 @@ export default {
     this.$common.getContractBalance().then( res =>{
       this.contractBalance = res
     })
-    //已兑换的GT
-    this.$common.getTotaldestroy().then( res =>{
-      this.totaldestroy = res
-    })
+    this.getContractInfo();
     this.navigator = window.navigator
 
     this.getObtainHistory()
@@ -154,7 +157,17 @@ export default {
   },  
   methods:{
     //账户信息
-    getAccountInfo(){
+    getContractInfo(){
+      this.$rpc.blockchain.getContractStorage("ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp", "HALVE_BLOCK", true).then(data => {
+        this.nextHalve = data.data
+        this.currentBlock = data.block_number
+      })
+
+      this.$rpc.blockchain.getContractStorage("ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp", "TOTAL_EXCHANGE", true).then(data => {
+        this.totalExchange = data.data || 0
+      })
+    },
+    getAccountInfo () {
       this.$rpc.blockchain.getAccountInfo(this.walletAccount,true).then(account => {
         this.accountInfo = account
         this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
@@ -183,10 +196,6 @@ export default {
       location.href = location.origin
     },
 
-    onReady(instance, CountUp) {
-      const that = this
-      instance.update(that.endVal + 100)
-    },
     historyModal(type){
       this.$refs['historyModal'].showModal(type)
     },
