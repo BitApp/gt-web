@@ -138,16 +138,15 @@ export default {
   mounted(){
     this.initIwallet()
     //资金池
-    this.$common.getContractBalcnce().then( res =>{
+    this.$common.getContractBalance().then( res =>{
       this.contractBalance = res
     })
-    //已兑换的ABCT
+    //已兑换的GT
     this.$common.getTotaldestroy().then( res =>{
       this.totaldestroy = res
     })
     this.navigator = window.navigator
-    //价格
-    this.getPriceDown()
+
     this.getObtainHistory()
     this.ref = this.$route.query.ref || window.sessionStorage.getItem('ref') || ''
     window.sessionStorage.setItem('ref',this.ref)
@@ -167,24 +166,6 @@ export default {
         window.location = `https://www.iostabc.com/tx/${this.txhash}`
       }
     },
-    getPrice(){
-      this.$common.getPrice().then( res =>{
-        this.priceInfo = res
-        this.priceTimePercent = (+new Date() -  new Date(this.priceInfo.created_at)) / (600 * 1000)
-        if (this.changeType == 'price') {
-          if (/cn/i.test(this.lang.lang)) {
-            this.startPrice = this.priceInfo.price_cny_10m_ago + (this.priceInfo.price_cny - this.priceInfo.price_cny_10m_ago) * this.priceTimePercent
-            this.endPrice = this.priceInfo.price_cny
-          } else {
-            this.startPrice = this.priceInfo.price_usd_10m_ago + this.priceTimePercent * (this.priceInfo.price_usd - this.priceInfo.price_usd_10m_ago)
-            this.endPrice = this.priceInfo.price_usd
-          }
-        } else {
-          this.startPrice = this.priceInfo.price_ratio_10m_ago + this.priceTimePercent * (this.priceInfo.price_ratio - this.priceInfo.price_ratio_10m_ago)
-          this.endPrice = this.priceInfo.price_ratio
-        }
-      })
-    },
 
     unvoteTip(data){
       if (data.message) {
@@ -201,29 +182,7 @@ export default {
       cookies.setItem(document, "lang", item, expire, "/");
       location.href = location.origin
     },
-    getPriceDown(){
-      this.getPrice()
-      setInterval(() => {
-        this.getPrice()
-      },610 * 1000)
-    },
-    priceChange(){
-      this.priceTimePercent = (+new Date() -  new Date(this.priceInfo.created_at)) / (600 * 1000)
-      if (this.changeType == 'ratio') {
-        if (/cn/i.test(this.lang.lang)) {
-          this.startPrice = this.priceInfo.price_cny_10m_ago + (this.priceInfo.price_cny - this.priceInfo.price_cny_10m_ago) * this.priceTimePercent
-          this.endPrice = this.priceInfo.price_cny
-        } else {
-          this.startPrice = this.priceInfo.price_usd_10m_ago + this.priceTimePercent * (this.priceInfo.price_usd - this.priceInfo.price_usd_10m_ago)
-          this.endPrice = this.priceInfo.price_usd
-        }
-        this.changeType = 'price'
-      } else {
-        this.startPrice = this.priceInfo.price_ratio_10m_ago + this.priceTimePercent * (this.priceInfo.price_ratio - this.priceInfo.price_ratio_10m_ago)
-        this.endPrice = this.priceInfo.price_ratio
-        this.changeType = 'ratio'
-      }
-    },
+
     onReady(instance, CountUp) {
       const that = this
       instance.update(that.endVal + 100)
@@ -234,9 +193,9 @@ export default {
     ruleModal(type){
       this.$refs['tipsModal'].showModal(type)
     },
-    unvoteModal(){
-      this.$refs['unvoteModal'].showModal()
-    },
+    // unvoteModal(){
+    //   this.$refs['unvoteModal'].showModal()
+    // },
     //路由
     toRoute (route) {
       this.$router.push(`/${route}`)
