@@ -1,22 +1,15 @@
 <template>
   <b-modal  ref="history-modal" class="modal" hide-footer @hide="modalHide">
-    <div class="nodata-view" v-if="(issueList.length == 0 && type == 'issue') || (exchangeList.length == 0&& type == 'exchange') ||  (rechargeHistory.length == 0&& type == 'recharge')">
+    <div class="nodata-view" v-if="exchangeList.length == 0">
       暂无数据
     </div>
     <div v-else>
-      <b-list-group v-if="issueList.length>0">
-        <b-list-group-item class="item"  v-for="(item,index) in issueList" :key="index">
-          <span>分红数量：{{item.amount}}</span> <span class="ml-2">分红块：{{item.block}}</span>
-        </b-list-group-item>
-      </b-list-group>
       <b-list-group v-if="exchangeList.length>0">
         <b-list-group-item class="item"  v-for="(item,index) in exchangeList" :key="index">
-          <span>ABCT数量：{{item.abct_amount}}</span> <span class="ml-2">兑换IOST数量：{{item.iost_amount}}</span> <span class="ml-2">所在块：{{item.block}}</span>
-        </b-list-group-item>
-      </b-list-group>
-      <b-list-group v-if="rechargeHistory.length>0">
-        <b-list-group-item class="item"  v-for="(item,index) in rechargeHistory" :key="index">
-          <span>IOST数量：{{item.iost_amount}}</span> <span class="ml-2">充值块：{{item.block}}</span>
+          <span>GT数量：{{item.amount}}</span> 
+          <!--<span class="ml-2">兑换IOST数量：{{item.iost_amount}}</span>--> 
+          <span class="ml-2">交易：<b-link target="_blank" :href="'https://www.iostabc.com/tx/' + item.hash">{{item.hash.slice(0,8) + "..." + item.hash.slice(-8)}}</b-link></span>
+          <span class="ml-2">所在区块：{{item.block}}</span>
         </b-list-group-item>
       </b-list-group>
       <div class="pagination-view">
@@ -41,10 +34,8 @@ export default {
   data(){
     return{
       walletAccount:'',
-      issueList:[],
       type:'',
       exchangeList:[],
-      rechargeHistory:[],
       totalCount:0,
       pagination: {
         page: 1,
@@ -61,7 +52,6 @@ export default {
     },
     modalHide(){
       this.exchangeList = []
-      this.issueList = []
       this.totalCount = 0
       this.pagination.page = 1
     },
@@ -70,25 +60,13 @@ export default {
         return
       }
       this.pagination.page = page
-      this.getList(this.type)
+      this.getList()
     },
-    getList(type){
-      if (type == 'issue') {
-        this.$common.getIssueHistory(this.walletAccount,this.pagination).then( res =>{
-          this.issueList = res.actions
-          this.totalCount = res.total
-        })
-      } else if (type == 'exchange') {
-        this.$common.getExchangeHistory(this.walletAccount,this.pagination).then( res =>{
-          this.exchangeList = res.actions
-          this.totalCount = res.total
-        })
-      } else if (type == 'recharge') {
-        this.$common.getRechargeHistory(this.pagination).then( res =>{
-          this.rechargeHistory = res.actions
-          this.totalCount = res.total
-        })
-      }
+    getList(){
+      this.$common.getExchangeHistory(this.walletAccount, this.pagination).then( res =>{
+        this.exchangeList = res.data
+        this.totalCount = res.total
+      })
     }
   }
 }

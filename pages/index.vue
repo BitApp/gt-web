@@ -45,10 +45,10 @@
               <b-input-group-text><strong>0.066 IOST / GT</strong></b-input-group-text>
             </b-input-group>
             <div class="mt-20">
-              <b-btn block size="lg" variant="primary">兑换</b-btn>
+              <b-btn block size="lg" variant="primary" @click="exchange">兑换</b-btn>
             </div>
             <div class="mt-15 ta">
-              <a>查看兑换记录 ></a>
+              <b-btn variant="link" @click="historyModal">查看兑换记录 ></b-btn>
             </div>
           </div>
           <div class="exchange-pool mt-15">
@@ -61,7 +61,7 @@
         </div>
       </div>
       <HistoryModal ref="historyModal" />
-      <TipsModal ref="tipsModal" />
+      <!--<TipsModal ref="tipsModal" />-->
       <div class="mask-view" v-show="isloading">
         <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
       </div>
@@ -81,6 +81,7 @@
 </template>
 <script>
 import Vue from "vue"
+import IOST from 'iost'
 import DiffLabel from '~/components/DiffLabel.vue'
 import HistoryModal from '~/components/HistoryModal.vue'
 import VueCountdown from '@chenfengyuan/vue-countdown'
@@ -88,6 +89,7 @@ import TipsModal from '~/components/TipsModal.vue'
 // import UnVoteModal from '~/components/UnVoteModal.vue'
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
+import {contract} from "~/plugins/variables"
 
 export default {
   components: {
@@ -150,7 +152,6 @@ export default {
     this.getContractInfo();
     this.navigator = window.navigator
 
-    this.getObtainHistory()
     this.ref = this.$route.query.ref || window.sessionStorage.getItem('ref') || ''
     window.sessionStorage.setItem('ref',this.ref)
     this.language = /cn/i.test(this.lang.lang)? 'zh_Hans_CN':/en/i.test(this.lang.lang)?'en_US':'zh_Hant_HK'
@@ -158,12 +159,12 @@ export default {
   methods:{
     //账户信息
     getContractInfo(){
-      this.$rpc.blockchain.getContractStorage("ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp", "HALVE_BLOCK", true).then(data => {
+      this.$rpc.blockchain.getContractStorage(contract, "HALVE_BLOCK", true).then(data => {
         this.nextHalve = data.data
         this.currentBlock = data.block_number
       })
 
-      this.$rpc.blockchain.getContractStorage("ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp", "TOTAL_EXCHANGE", true).then(data => {
+      this.$rpc.blockchain.getContractStorage(contract, "TOTAL_EXCHANGE", true).then(data => {
         this.totalExchange = data.data || 0
       })
     },
@@ -180,15 +181,6 @@ export default {
       }
     },
 
-    unvoteTip(data){
-      if (data.message) {
-        this.txMessage = data.message
-      }
-      this.modalText = data.text
-      this.txhash = data.txhash
-      this.getAccountInfo()
-      this.$refs.statusModal.show()
-    },
     changeLang(item){
       const date = new Date();
       const expire = new Date(date.getTime() + 30 * 24 * 60 * 60 * 1000);
@@ -199,43 +191,7 @@ export default {
     historyModal(type){
       this.$refs['historyModal'].showModal(type)
     },
-    ruleModal(type){
-      this.$refs['tipsModal'].showModal(type)
-    },
-    // unvoteModal(){
-    //   this.$refs['unvoteModal'].showModal()
-    // },
-    //路由
-    toRoute (route) {
-      this.$router.push(`/${route}`)
-    },
-    historyChange(){
-      this.historyInfo = this.historyList[this.showIndex]
-      this.historyDirect = 'in'
-      setTimeout(()=>{
-        this.historyDirect = 'out'
-      },2000)
 
-      var timeInterval = setInterval(() => {
-        if (this.showIndex > 19) {
-          this.showIndex = 0
-        }
-        this.historyInfo = this.historyList[this.showIndex]
-        this.historyDirect = 'in'
-        setTimeout(()=>{
-          this.historyDirect = 'out'
-        },2000)
-        this.showIndex ++
-      }, 4000);
-    },
-    getObtainHistory(){
-      //历史获得记录
-      this.$common.getObtainHistory().then( res =>{
-        this.historyList = res.data
-        this.showIndex = 0
-        this.historyChange()
-      })
-    },
     initIwallet(){
       const _this = this
       var timeInterval = setInterval(() => {
@@ -266,6 +222,25 @@ export default {
       number = String(number).replace( new RegExp(str),"$1")
       number = Number(number)
       return number
+    },
+
+    exchange () {
+      if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}吗？`)){
+        const iost = IWalletJS.newIOST(IOST)
+        const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
+        ctx.gasLimit = 300000
+        const _this = this
+        iost.signAndSend(ctx).on('pending', (trx) => {
+          alert(_this.exchangeNumber + "GT 兑换完成，请等待交易确认")
+          _this.exchangeNumber = 0
+        })
+        .on('success', (result) => {
+          // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
+        })
+        .on('failed', (failed) => {
+          alert("兑换失败")
+        })
+      }
     }
   },
   

@@ -1,7 +1,7 @@
 export default function API(axios) {
   axios.defaults.baseURL = 'https://www.iostabc.com/endpoint'
 
-  const apiUrl = 'https://www.iostabc.com/api/gt'
+  const apiUrl = 'http://hibtc.bitapp.net.cn/api'
   // const apiUrl = 'https://www.iostabc.com/api/abctest'
   const iosturl = 'https://www.iostabc.com/api'
   
@@ -37,31 +37,13 @@ export default function API(axios) {
         }
       })
     },
-    getIssueHistory (account, { page = 1, size = 20 } = {}) {
-      return axios.get(`${apiUrl}/issueobtainabct`,{
-        params: {
-          account,
-          page,
-          size,
-        }
-      })
-    },
     getExchangeHistory (account, { page = 1, size = 20 } = {}) {
-      return axios.get(`${apiUrl}/exchangeobtainabct`,{
-        params: {
-          account,
-          page,
-          size,
-        }
-      })
-    },
-    getRechargeHistory ({ page = 1, size = 20 } = {}) {
-      return axios.get(`${apiUrl}/historytopupabct`,{
+      return axios.get(`${apiUrl}/exchanges/${account}`,{
         params: {
           page,
           size,
         }
       })
-    },
+    }
   }
 }
