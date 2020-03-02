@@ -22,11 +22,11 @@
       <div class="countdown mt-15">
         <div class="countdown-content d-flex">
           <div>减半倒计时：</div>
-          <div class="number">
-            <countdown :time="(nextHalve-currentBlock) * 500">
-              <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
-            </countdown>
-          </div>
+          <no-ssr>
+          <countdown class="number" :time="(nextHalve-currentBlock) * 500">
+            <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
+          </countdown>
+          </no-ssr>
         </div>
       </div>
       <div class="exchange mt-20">
@@ -59,23 +59,17 @@
             <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * 0.066,2) + '\xa0 IOST'}}  </span>
           </div>
         </div>
+        <div>
+          <p class="mt-20">说明:</p>
+          <p class="mt-10">1. 清风链游戏公益积分 GUILD_TOKEN，简称GT总发行量21亿</p>
+          <p>2. 每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得</p>
+          <p>3. 每过一年，发行量将减少一半</p>
+          <p>4. 清风链官方将每月固定配发5万IOST以0.066 IOST/GT 的汇率回购GT代币</p>
+          <p>5. 清风链将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
+          <p>6. 本活动最终解释权归清风链游戏公社所有</p>
+        </div>
       </div>
       <HistoryModal ref="historyModal" />
-      <!--<TipsModal ref="tipsModal" />-->
-      <div class="mask-view" v-show="isloading">
-        <div class=" ld ld-spinner ld-spin-fast" style="font-size:64px;color:#8da"></div>
-      </div>
-      <b-modal ref="statusModal">
-        <div style="color:#000;">{{modalText}}</div>
-        <template slot="modal-footer" slot-scope="{cancel}">
-          <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
-            查看交易结果
-          </b-button>
-          <b-button size="sm" @click="cancel()">
-            Cancel
-          </b-button>
-        </template>
-      </b-modal>
     </div>
   </div>
 </template>
@@ -104,22 +98,12 @@ export default {
   data () {
     return {
       walletAccount:'',
-      priceInfo:{},
       contractBalance:{},
       accountInfo:{},
-      historyList:[],
-      historyInfo:null,
-      historyDirect:'in',
-      showIndex:0,
       tokenbalance:0,
-      votebalances:0,
-      frozenbalances:0,
+      // votebalances:0,
+      // frozenbalances:0,
       navigator:{},
-      startPrice:'',
-      endPrice:'',
-      totaldestroy:'',
-      priceTimePercent:0,
-      changeType:'ratio',
       exchangeNumber: 0, 
       isloading: false,
       txhash:'',
@@ -171,8 +155,8 @@ export default {
     getAccountInfo () {
       this.$rpc.blockchain.getAccountInfo(this.walletAccount,true).then(account => {
         this.accountInfo = account
-        this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
-        this.frozenbalances =  account.frozen_balances.reduce((reduced,frozen) => frozen.amount ? reduced+frozen.amount:0,0)
+        // this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
+        // this.frozenbalances =  account.frozen_balances.reduce((reduced,frozen) => frozen.amount ? reduced+frozen.amount:0,0)
       })
     },
     toTxHash(){
@@ -225,22 +209,26 @@ export default {
     },
 
     exchange () {
-      this.exchangeNumber = fixedNumber(this.exchangeNumber, 0)
-      if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}吗？`)){
-        const iost = IWalletJS.newIOST(IOST)
-        const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
-        ctx.gasLimit = 300000
-        const _this = this
-        iost.signAndSend(ctx).on('pending', (trx) => {
-          alert(_this.exchangeNumber + "GT 兑换完成，请等待交易确认")
-          _this.exchangeNumber = 0
-        })
-        .on('success', (result) => {
-          // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
-        })
-        .on('failed', (failed) => {
-          alert("兑换失败")
-        })
+      this.exchangeNumber = this.fixedNumber(this.exchangeNumber, 0)
+      if (this.exchangeNumber > this.tokenbalance) {
+        alert("GT余额不足")
+      } else {
+        if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}吗？`)){
+          const iost = IWalletJS.newIOST(IOST)
+          const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
+          ctx.gasLimit = 300000
+          const _this = this
+          iost.signAndSend(ctx).on('pending', (trx) => {
+            alert(_this.exchangeNumber + "GT 兑换完成，请等待交易确认")
+            _this.exchangeNumber = 0
+          })
+          .on('success', (result) => {
+            // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
+          })
+          .on('failed', (failed) => {
+            alert("兑换失败")
+          })
+        }
       }
     }
   },
