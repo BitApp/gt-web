@@ -1,18 +1,18 @@
 {
   "apps" : [
     {
-      "name"      : "abct-web",
+      "name"      : "gt-web",
       "script"    : "server/index.js",
       "instances" : 0,
-      "instance_var": "ABCT-WEB",
+      "instance_var": "GT-WEB",
       "exec_mode" : "cluster",
       "watch"     : false,
       "ignore_watch": [
         "logs",
         ".nuxt"
       ],
-      "error_file": "logs/abct.web.stderr.log",
-      "out_file"  : "logs/abct.web.stdout.log",
+      "error_file": "logs/gt.web.stderr.log",
+      "out_file"  : "logs/gt.web.stdout.log",
       "mergeLogs" : false,
       "env": {
         "NODE_ENV": "dev"
