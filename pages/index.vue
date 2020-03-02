@@ -41,7 +41,7 @@
           </div>
           <div class="exchange-pool">
             <b-input-group>
-              <b-form-input focus type="number" v-model="exchangeNumber" placeholder="请输入兑换数量" autocomplete="off"></b-form-input>
+              <b-form-input focus type="number" min=1 v-model="exchangeNumber" step="1" placeholder="请输入兑换数量" autocomplete="off"></b-form-input>
               <b-input-group-text><strong>0.066 IOST / GT</strong></b-input-group-text>
             </b-input-group>
             <div class="mt-20">
@@ -225,6 +225,7 @@ export default {
     },
 
     exchange () {
+      this.exchangeNumber = fixedNumber(this.exchangeNumber, 0)
       if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}吗？`)){
         const iost = IWalletJS.newIOST(IOST)
         const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
