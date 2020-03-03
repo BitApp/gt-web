@@ -1,5 +1,17 @@
 <template>
   <div class="gt-body">
+    <b-alert
+      :variant="variant"
+      fade
+      :show="dismissCountDown"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+    >
+    <div>{{alertText}}</div>
+      <div class="mt-2" v-if="faileddes != ''">
+        {{faileddes.message||faileddes}}
+      </div>
+    </b-alert>
     <div class="gt-web-index clearfix">
       <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
@@ -24,7 +36,7 @@
             </div>
             <div class="countdown mt-15">
               <div class="countdown-content d-flex">
-                <div>减半倒计时：</div>
+                <div>发行减半倒计时：</div>
                 <no-ssr>
                 <countdown class="number" :time="(nextHalve-currentBlock) * 500">
                   <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
@@ -33,7 +45,12 @@
               </div>
             </div>
             <div class="mt-15 info-view">
-              <div class="info-line" @click="voteNumber = fixedNumber(accountInfo.balance,6)">我的IOST：{{fixedNumber(accountInfo.balance,6)}}</div>
+              <div class="info-line d-flex space-between">
+                <div>
+                  我的IOST：{{fixedNumber(accountInfo.balance,6)}}
+                </div>
+                <b-btn variant="link" size="sm" @click="voteNumber = fixedNumber(accountInfo.balance, 2)">全部</b-btn>
+              </div>
               <div class="info-line">投票中的IOST：{{votebalances}}</div>
               <div class="frozen-line">
                 <span>冻结中的IOST：{{frozenbalances}}</span>
@@ -47,19 +64,25 @@
                 <img class="icon-img" src="@/assets/imgs/icon_gt.svg">
               </div>
               <div class="font-norwester fs-20 scale-title mt-20">
-                1 GT = 0.066 IOST
+                1 GT = {{gtPrice}} IOST
               </div>
-              <div class="scale-desc">投票给 hibtc 节点即可免费获得 GT</div>
+              <div class="scale-desc">投票给 {{nodeAddr}} 节点即可免费获得 GT</div>
               <b-input-group>
-                <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" @update="inputChange" autocomplete="off"></b-form-input>
-                <b-input-group-append>
-                  <div class="all-btn" @click="voteNumber = fixedNumber(accountInfo.balance,0);inputChange()">全部</div>
-                </b-input-group-append>
+                <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" autocomplete="off"></b-form-input>
+                <b-btn class="mt-20" block size="lg" variant="primary" @click="vote">兑换</b-btn>
               </b-input-group>
               <div style="padding:10px">
-                <div class="scale-tip">当前hibtc总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给 hibtc，每天可分得 {{'\xa0'+fixedNumber(abctNumber,6) + '\xa0'}} hibtc </div> 
-                <div class="scale-tip mt-2 fb">{{fixedNumber(abctNumber,6) + '\xa0'}} hibtc = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST = {{fixedNumber(priceNumber,6) + (/cn/i.test(lang.lang)?' CNY':' USD')}}</div>
+                <div class="scale-tip">当前{{nodeAddr}}总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给 {{nodeAddr}}，每天可分得 {{'\xa0'+fixedNumber(gtNumber,6) + '\xa0'}} GT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST </div> 
               </div>
+            </div>
+            <div>
+              <p class="mt-20">说明:</p>
+              <p class="mt-10">1. 清风链游戏公益积分 GUILD_TOKEN，简称GT总发行量21亿</p>
+              <p>2. 每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得</p>
+              <p>3. 每过一年，发行量将减少一半</p>
+              <p>4. 清风链官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币</p>
+              <p>5. 清风链将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
+              <p>6. 本活动最终解释权归清风链游戏公社所有</p>
             </div>
           </div>
         </b-tab>
@@ -92,7 +115,7 @@
               <div class="exchange-pool">
                 <b-input-group>
                   <b-form-input focus type="number" min=1 v-model="exchangeNumber" step="1" placeholder="请输入兑换数量" autocomplete="off"></b-form-input>
-                  <b-input-group-text><strong>0.066 IOST / GT</strong></b-input-group-text>
+                  <b-input-group-text><strong>{{gtPrice}} IOST / GT</strong></b-input-group-text>
                 </b-input-group>
                 <div class="mt-20">
                   <b-btn block size="lg" variant="primary" @click="exchange">兑换</b-btn>
@@ -106,7 +129,7 @@
                 <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
               </div>
               <div class="exchange-pool mt-15">
-                <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * 0.066,2) + '\xa0 IOST'}}  </span>
+                <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * gtPrice,2) + '\xa0 IOST'}}  </span>
               </div>
             </div>
             <div>
@@ -114,15 +137,28 @@
               <p class="mt-10">1. 清风链游戏公益积分 GUILD_TOKEN，简称GT总发行量21亿</p>
               <p>2. 每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得</p>
               <p>3. 每过一年，发行量将减少一半</p>
-              <p>4. 清风链官方将每月固定配发5万IOST以0.066 IOST/GT 的汇率回购GT代币</p>
+              <p>4. 清风链官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币</p>
               <p>5. 清风链将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
               <p>6. 本活动最终解释权归清风链游戏公社所有</p>
             </div>
           </div>
           <HistoryModal ref="historyModal" />
+          <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
         <b-tab title="商城"><p class="mt-20 ta-c">商城即将上线，敬请期待</p></b-tab>
       </b-tabs>
+      <b-modal ref="statusModal" >
+        <div style="color:#000;">{{modalText}}</div>
+        <div style="color:#721c24">{{txMessage}}</div>
+        <template slot="modal-footer" slot-scope="{cancel}">
+          <b-button v-if="txhash != ''" size="sm" variant="info" @click="toTxHash">
+            查看交易结果
+          </b-button>
+          <b-button size="sm" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -133,16 +169,17 @@ import DiffLabel from '~/components/DiffLabel.vue'
 import HistoryModal from '~/components/HistoryModal.vue'
 import VueCountdown from '@chenfengyuan/vue-countdown'
 import TipsModal from '~/components/TipsModal.vue'
-// import UnVoteModal from '~/components/UnVoteModal.vue'
+import UnVoteModal from '~/components/UnVoteModal.vue'
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
-import {contract} from "~/plugins/variables"
+import {contract, gtPrice, nodeAddr} from "~/plugins/variables"
 
 export default {
   components: {
     DiffLabel,
     TipsModal,
     HistoryModal,
+    UnVoteModal,
     VueCountdown
   },
   computed:{
@@ -150,16 +187,29 @@ export default {
   },
   data () {
     return {
+      voteNumber:'',
+      gtNumber: '',
+      alertText: '',
+      faileddes:'',
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      variant: 'danger',
+      gtPrice,
+      nodeAddr,
+      dayGT: 50000,
+      iostNumber: 0,
       walletAccount:'',
       contractBalance:{},
       accountInfo:{},
+      producerVotes: 0,
       tokenbalance:0,
-      // votebalances:0,
-      // frozenbalances:0,
+      votebalances:0,
+      frozenbalances:0,
       navigator:{},
       exchangeNumber: 0, 
       isloading: false,
       txhash:'',
+      txMessage: '',
       modalText:'',
       language:'zh_Hans_CN',
 
@@ -186,6 +236,9 @@ export default {
     this.$common.getContractBalance().then( res =>{
       this.contractBalance = res
     })
+    this.$common.getProducerInfo(nodeAddr).then( res => {
+      this.producerVotes = res.votes
+    })
     this.getContractInfo();
     this.navigator = window.navigator
 
@@ -208,14 +261,22 @@ export default {
     getAccountInfo () {
       this.$rpc.blockchain.getAccountInfo(this.walletAccount,true).then(account => {
         this.accountInfo = account
-        // this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
-        // this.frozenbalances =  account.frozen_balances.reduce((reduced,frozen) => frozen.amount ? reduced+frozen.amount:0,0)
+        this.votebalances= account.vote_infos.reduce((reduced, vote) => vote.votes ? reduced + vote.votes : 0, 0)
+        this.frozenbalances =  account.frozen_balances.reduce((reduced,frozen) => frozen.amount ? reduced+frozen.amount:0,0)
       })
     },
     toTxHash(){
       if (this.txhash) {
         window.location = `https://www.iostabc.com/tx/${this.txhash}`
       }
+    },
+    unvoteTip(data){
+      if (data.message) {
+        this.txMessage = data.message
+      }
+      this.modalText = data.text
+      this.txhash = data.txhash
+      this.$refs.statusModal.show()
     },
 
     changeLang(item){
@@ -266,7 +327,7 @@ export default {
       if (this.exchangeNumber > this.tokenbalance) {
         alert("GT余额不足")
       } else {
-        if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}吗？`)){
+        if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * gtPrice)}吗？`)){
           const iost = IWalletJS.newIOST(IOST)
           const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
           ctx.gasLimit = 300000
@@ -283,6 +344,84 @@ export default {
           })
         }
       }
+    },
+
+    vote(){
+      let tmpvoteNumber = this.voteNumber || 0
+      if (tmpvoteNumber <= 0) {
+        this.variant = 'danger'
+        this.alertText = '投票数量不能小于0'
+        this.dismissCountDown = this.dismissSecs
+        return
+      } 
+      if (tmpvoteNumber > this.accountInfo.balance) {
+        this.variant = 'danger'
+        this.alertText = '投票数量超过可使用余额'
+        this.dismissCountDown = this.dismissSecs
+        return
+      }
+      this.isshowModal = false
+      this.modalText = `投票已完成，投给${nodeAddr} ${'\xa0'+tmpvoteNumber+'\xa0'}票，按当前节点总票数，每天会分得${'\xa0'+ this.fixedNumber(this.gtNumber,6)+'\xa0'} abct`
+      this.txMessage = ''
+      const iost = IWalletJS.newIOST(IOST)
+      const ctx = iost.callABI('vote_producer.iost', "vote", [this.walletAccount, nodeAddr,tmpvoteNumber.toString()])
+      ctx.gasLimit = 300000
+      iost.signAndSend(ctx).on('pending', (trx) => {
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.txhash = trx
+          this.voteNumber = ''
+          this.$refs.statusModal.show()
+        }
+        // this.isloading = true
+      })
+      .on('success', (result) => {
+        // this.isloading = false
+        // this.variant = 'success'
+        // this.alertText = '投票成功'
+        // this.voteNumber = ''
+        // this.getAccountInfo()
+        // this.dismissCountDown = this.dismissSecs
+        if (result.tx_hash) {
+          this.getAccountInfo()
+        }
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.txhash = result.tx_hash
+          this.voteNumber = ''
+          this.$refs.statusModal.show()
+        }
+      })
+      .on('failed', (failed) => {
+        // this.isloading = false
+        if (/rejected/i.test(failed)) {
+          return
+        }
+        if (!this.isshowModal) {
+          this.isshowModal = true
+          this.modalText = '投票失败'
+          this.txhash = failed.tx_hash?failed.tx_hash:''
+          this.txMessage = JSON.stringify(failed)
+          this.$refs.statusModal.show()
+        }
+        // this.variant = 'danger'
+        // this.alertText = '投票失败'
+        // this.faileddes = failed
+        // this.dismissCountDown = this.dismissSecs
+      })
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    unvoteModal(){
+      this.$refs['unvoteModal'].showModal()
+    }
+  },
+
+  watch: {
+    voteNumber: function () {
+      this.gtNumber = ((this.voteNumber || 0) / parseInt(this.producerVotes)) * this.dayGT
+      this.iostNumber = this.gtNumber * gtPrice
     }
   },
   

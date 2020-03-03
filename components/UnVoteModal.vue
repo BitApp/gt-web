@@ -30,6 +30,7 @@
 
 <script>
 import IOST from 'iost'
+import { nodeAddr } from "~/plugins/variables"
 
 export default {
   data() {
@@ -44,7 +45,7 @@ export default {
     getAccountInfo(){
       this.$rpc.blockchain.getAccountInfo(this.walletAccount,true).then(account => {
         let votelist = account.vote_infos
-        this.voteList = votelist.filter(item => item.option != 'iostabc')
+        this.voteList = votelist.filter(item => item.option != nodeAddr)
       })
     },
     showModal(){
