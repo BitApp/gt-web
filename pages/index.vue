@@ -132,15 +132,6 @@
                 <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * gtPrice,2) + '\xa0 IOST'}}  </span>
               </div>
             </div>
-            <div>
-              <p class="mt-20">说明:</p>
-              <p class="mt-10">1. 清风链游戏公益积分 GUILD_TOKEN，简称GT总发行量21亿</p>
-              <p>2. 每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得</p>
-              <p>3. 每过一年，发行量将减少一半</p>
-              <p>4. 清风链官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币</p>
-              <p>5. 清风链将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
-              <p>6. 本活动最终解释权归清风链游戏公社所有</p>
-            </div>
           </div>
           <HistoryModal ref="historyModal" />
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
