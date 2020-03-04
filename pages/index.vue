@@ -480,6 +480,7 @@ export default {
     .vote-web-view{
       .info-view{
         padding: 15px;
+        border-radius: 8px;
         background: #2A3657;
         .info-line{
           line-height: 25px;
