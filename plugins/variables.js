@@ -15,7 +15,8 @@ let serverApiDomain = "",
     contract = "ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp",
     // 1 gt = 0.066 iost
     gtPrice = 0.066,
-    nodeAddr = 'hibtc'
+    nodeAddr = 'hibtc',
+    DAY_MAX = 50000
 
 if(process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "development"){
     //开发环境
@@ -53,4 +54,4 @@ else if(process.env.NODE_ENV === "production"){
     }
 }
 
-export {clientApiDomain,serverApiDomain,webSocketDomain,cdnDomain, fileDomain, protocol, contract, gtPrice, nodeAddr}
+export {clientApiDomain,serverApiDomain,webSocketDomain,cdnDomain, fileDomain, protocol, contract, gtPrice, nodeAddr, DAY_MAX}

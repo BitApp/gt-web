@@ -17,15 +17,15 @@
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
       </div>
       <b-tabs pills>
-        <b-tab title="投票" active>
+        <b-tab title="投票双挖" active>
           <div class="vote-web-view">
             <div class="banner-bg mt-10">
               <div class="banner">
-                <div class="title">清风链游戏公益积分 GT（GUILD_TOKEN)</div>
+                <div class="title">清风链游公会权益积分 GT（GUILD_TOKEN)</div>
                 <div class="banner-content d-flex">
                   <div class="banner-content-left">
                     <div class="mt-8">
-                      <div>1. 总量 21亿 / 2. 超级回购计划</div>
+                      <div>1. 总量 2.1亿 / 2. 超级回购计划</div>
                       <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
                       <div>5. 积分商城即将上线</div>
                     </div>
@@ -36,7 +36,7 @@
             </div>
             <div class="countdown mt-15">
               <div class="countdown-content d-flex">
-                <div>发行减半倒计时：</div>
+                <div>产量减半倒计时：</div>
                 <no-ssr>
                 <countdown class="number" :time="(nextHalve-currentBlock) * 500">
                   <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
@@ -66,35 +66,35 @@
               <div class="font-norwester fs-20 scale-title mt-20">
                 1 GT = {{gtPrice}} IOST
               </div>
-              <div class="scale-desc">投票给 {{nodeAddr}} 节点即可免费获得 GT</div>
+              <div class="scale-desc">投票给[清风链游公会节点]即可免费获得 GT</div>
               <b-input-group>
                 <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" autocomplete="off"></b-form-input>
-                <b-btn class="mt-20" block size="lg" variant="primary" @click="vote">兑换</b-btn>
+                <b-btn class="mt-20" block size="lg" variant="primary" @click="vote">投票</b-btn>
               </b-input-group>
               <div style="padding:10px">
-                <div class="scale-tip">当前{{nodeAddr}}总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给 {{nodeAddr}}，每天可分得 {{'\xa0'+fixedNumber(gtNumber,6) + '\xa0'}} GT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST </div> 
+                <div class="scale-tip">当前[清风链游公会节点]总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给公会节点，每天可分得 {{'\xa0'+fixedNumber(gtNumber) + '\xa0'}} GT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST </div> 
               </div>
             </div>
             <div>
               <p class="mt-20">说明:</p>
-              <p class="mt-10">1. 清风链游戏公益积分 GUILD_TOKEN，简称GT总发行量21亿</p>
-              <p>2. 每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得</p>
-              <p>3. 每过一年，发行量将减少一半</p>
-              <p>4. 清风链官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币</p>
-              <p>5. 清风链将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
-              <p>6. 本活动最终解释权归清风链游戏公社所有</p>
+              <p class="mt-10">1. 清风链游公会权益积分 GUILD_TOKEN，简称GT总发行量2.1亿</p>
+              <p>2. 每天固定挖出5万Token，按照投票用户的投票占节点总得票数的比例分得</p>
+              <p>3. 每过一年，日产量将减少为之前的一半</p>
+              <p>4. 清风链游公会官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币（未来视节点票数而定，回购金额及回购汇率会有所增加）</p>
+              <p>5. 清风链游公会将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
+              <p>6. 本活动最终解释权归清风链游公会所有</p>
             </div>
           </div>
         </b-tab>
-        <b-tab title="回购">
+        <b-tab title="积分兑换">
           <div class="exchange-web-view mt-20">
             <div class="banner-bg mt-10">
               <div class="banner">
-                <div class="title">清风链游戏公益积分 GT（GUILD_TOKEN)</div>
+                <div class="title">清风链游公会权益积分 GT（GUILD_TOKEN)</div>
                 <div class="banner-content d-flex">
                   <div class="banner-content-left">
                     <div class="mt-8">
-                      <div>1. 总量 21亿 / 2. 超级回购计划</div>
+                      <div>1. 总量 2.1亿 / 2. 超级回购计划</div>
                       <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
                       <div>5. 积分商城即将上线</div>
                     </div>
@@ -136,7 +136,7 @@
           <HistoryModal ref="historyModal" />
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
-        <b-tab title="商城"><p class="mt-20 ta-c">商城即将上线，敬请期待</p></b-tab>
+        <b-tab title="积分商城"><p class="mt-20 ta-c">商城即将上线，敬请期待</p></b-tab>
       </b-tabs>
       <b-modal ref="statusModal" >
         <div style="color:#000;">{{modalText}}</div>
@@ -163,7 +163,7 @@ import TipsModal from '~/components/TipsModal.vue'
 import UnVoteModal from '~/components/UnVoteModal.vue'
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
-import {contract, gtPrice, nodeAddr} from "~/plugins/variables"
+import {contract, gtPrice, nodeAddr, DAY_MAX} from "~/plugins/variables"
 
 export default {
   components: {
@@ -302,6 +302,7 @@ export default {
       }, 1000);
     },
     fixedNumber(numbers,fixed){
+      fixed = fixed || 2
       if (!numbers) {
         return 0
       }
@@ -352,7 +353,7 @@ export default {
         return
       }
       this.isshowModal = false
-      this.modalText = `投票已完成，投给${nodeAddr} ${'\xa0'+tmpvoteNumber+'\xa0'}票，按当前节点总票数，每天会分得${'\xa0'+ this.fixedNumber(this.gtNumber,6)+'\xa0'} abct`
+      this.modalText = `投票已完成，投给[清风链游公会节点] ${'\xa0'+tmpvoteNumber+'\xa0'}票，按当前节点总票数，每天会分得${'\xa0'+ this.fixedNumber(this.gtNumber, 2)+'\xa0'} GT`
       this.txMessage = ''
       const iost = IWalletJS.newIOST(IOST)
       const ctx = iost.callABI('vote_producer.iost', "vote", [this.walletAccount, nodeAddr,tmpvoteNumber.toString()])
@@ -411,7 +412,7 @@ export default {
 
   watch: {
     voteNumber: function () {
-      this.gtNumber = ((this.voteNumber || 0) / parseInt(this.producerVotes)) * this.dayGT
+      this.gtNumber = Math.min(DAY_MAX, ((this.voteNumber || 0) / parseInt(this.producerVotes*1 + this.voteNumber * 1)) * this.dayGT)
       this.iostNumber = this.gtNumber * gtPrice
     }
   },
