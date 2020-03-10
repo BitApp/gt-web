@@ -319,21 +319,25 @@ export default {
       if (this.exchangeNumber > this.tokenbalance) {
         alert("GT余额不足")
       } else {
-        if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * gtPrice)}吗？`)){
-          const iost = IWalletJS.newIOST(IOST)
-          const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber])
-          ctx.gasLimit = 300000
-          const _this = this
-          iost.signAndSend(ctx).on('pending', (trx) => {
-            alert(_this.exchangeNumber + "GT 兑换完成，请等待交易确认")
-            _this.exchangeNumber = 0
-          })
-          .on('success', (result) => {
-            // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
-          })
-          .on('failed', (failed) => {
-            alert("兑换失败")
-          })
+        if(this.exchangeNumber> 0 && confirm(`确定兑换${this.exchangeNumber} GT ≈ ${this.fixedNumber(this.exchangeNumber * gtPrice)} IOST吗？`)){
+          if (this.fixedNumber(this.exchangeNumber * gtPrice) > this.fixedNumber(this.contractBalance.balance,2)) {
+            alert("兑换资金池余额不足, 你最多可兑换" + this.fixedNumber(this.fixedNumber(this.contractBalance.balance, 2) / gtPrice, 2) + " GT")
+          } else {
+            const iost = IWalletJS.newIOST(IOST)
+            const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber.toString()])
+            ctx.gasLimit = 300000
+            const _this = this
+            iost.signAndSend(ctx).on('pending', (trx) => {
+              alert(_this.exchangeNumber + "GT 兑换完成，请等待交易确认")
+              _this.exchangeNumber = 0
+            })
+            .on('success', (result) => {
+              // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
+            })
+            .on('failed', (failed) => {
+              alert("兑换失败")
+            })
+          }
         }
       }
     },
