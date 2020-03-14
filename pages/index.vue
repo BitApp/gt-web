@@ -128,6 +128,7 @@
                 <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
                 <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
               </div>
+              <div class="mt-10 c-light">兑换资金池每月10号回冲，目前每月回购额度5万IOST，后续视节点票数及GT减半情况提高回购额度及回购汇率</div>
               <div class="exchange-pool mt-15">
                 <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * gtPrice,2) + '\xa0 IOST'}}  </span>
               </div>
@@ -498,6 +499,9 @@ export default {
       .exchange-info{
         padding: 15px;
         background: #2A3657;
+        .c-gray{
+          color: gray;
+        }
         .icon-view{
           display: flex;
           justify-content: center;

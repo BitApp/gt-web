@@ -6,7 +6,7 @@ export default function API(axios) {
   const iosturl = 'https://www.iostabc.com/api'
   
   // const contract = 'ContractGBxLy1B1jfGoAWUHGDW9k8hG7NRo4owwcerJmrNTK8xZ'
-  const contract = 'ContractGLdxhDjsBcSSLsMem7tumu8Ah4FYmkzSLc9epJ88fpPp'
+  const contract = 'ContractF7ZjX9TT8SbaZreDUXXy4vNK2QYRngv8Tr3RJJ1oVyb5'
 
   axios.interceptors.response.use(function (res) {
     return res.data ? res.data : Promise.reject(res)
@@ -21,7 +21,7 @@ export default function API(axios) {
       return axios.get(`${apiUrl}/totaldestroy`)
     },
     getTokenBalcnce (id) {
-      return axios.get(`/getTokenBalance/${id}/myt/1`)
+      return axios.get(`/getTokenBalance/${id}/guild_token/1`)
     },
     getProducerInfo (producer) {
       return axios.get(`${iosturl}/producer/${producer}`)
