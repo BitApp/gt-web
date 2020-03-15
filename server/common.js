@@ -1,7 +1,7 @@
 export default function API(axios) {
   axios.defaults.baseURL = 'https://www.iostabc.com/endpoint'
 
-  const apiUrl = 'http://hibtc.bitapp.net.cn/api'
+  const apiUrl = '/api'
   // const apiUrl = 'https://www.iostabc.com/api/abctest'
   const iosturl = 'https://www.iostabc.com/api'
   
