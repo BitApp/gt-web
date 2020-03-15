@@ -1,7 +1,6 @@
 export default function API(axios) {
-  axios.defaults.baseURL = 'https://www.iostabc.com/endpoint'
-
-  const apiUrl = 'https://gt.bitapp.net/api'
+  const apiUrl = '/api'
+  const endpointUrl = 'https://www.iostabc.com/endpoint'
   // const apiUrl = 'https://www.iostabc.com/api/abctest'
   const iosturl = 'https://www.iostabc.com/api'
   
@@ -15,13 +14,13 @@ export default function API(axios) {
   })
   return {
     getContractBalance () {
-      return axios.get(`/getTokenBalance/${contract}/iost/1`)
+      return axios.get(`${endpointUrl}/getTokenBalance/${contract}/iost/1`)
     },
     getTotaldestroy () {
       return axios.get(`${apiUrl}/totaldestroy`)
     },
     getTokenBalcnce (id) {
-      return axios.get(`/getTokenBalance/${id}/guild_token/1`)
+      return axios.get(`${endpointUrl}/getTokenBalance/${id}/guild_token/1`)
     },
     getProducerInfo (producer) {
       return axios.get(`${iosturl}/producer/${producer}`)
