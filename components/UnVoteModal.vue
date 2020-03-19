@@ -38,6 +38,7 @@ export default {
       voteList:[],
       walletAccount:'',
       selectItem:{},
+      nodeAddr,
       isshowModal:false,//避免弹框两次
     }
   },
