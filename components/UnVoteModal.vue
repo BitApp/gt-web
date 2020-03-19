@@ -45,7 +45,7 @@ export default {
     getAccountInfo(){
       this.$rpc.blockchain.getAccountInfo(this.walletAccount,true).then(account => {
         let votelist = account.vote_infos
-        this.voteList = votelist.filter(item => item.option != nodeAddr)
+        // this.voteList = votelist.filter(item => item.option != nodeAddr)
       })
     },
     showModal(){
