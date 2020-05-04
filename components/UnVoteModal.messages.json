@@ -1,5 +1,6 @@
 {
     "en_US": {
+        "(双挖中)": "(双挖中)",
         "取消": "Cancel",
         "取消投票": "Cancel vote",
         "取消投票失败": "Cancel vote failed",
@@ -12,6 +13,7 @@
         "赎回的IOST7_c75e": "Redemption of IOST will not arrive until 7 days later, will you redeem it?"
     },
     "zh_Hans_CN": {
+        "(双挖中)": "(双挖中)",
         "取消": "取消",
         "取消投票": "取消投票",
         "取消投票失败": "取消投票失败",
@@ -24,6 +26,7 @@
         "赎回的IOST7_c75e": "赎回的IOST7天之后才会到账，确定赎回吗?"
     },
     "zh_Hant_HK": {
+        "(双挖中)": "(雙挖中)",
         "取消": "取消",
         "取消投票": "取消投票",
         "取消投票失败": "取消投票失敗",

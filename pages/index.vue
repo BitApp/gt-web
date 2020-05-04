@@ -137,7 +137,22 @@
           <HistoryModal ref="historyModal" />
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
-        <b-tab title="积分商城"><p class="mt-20 ta-c">商城即将上线，敬请期待</p></b-tab>
+        <b-tab title="积分商城">
+          <ul class="mall-web-view mt-20">
+            <li v-for="(item, index) in productList" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <p class="mt-20 ta-c">
+            商城即将上线，敬请期待
+          </p>
+        </b-tab>
       </b-tabs>
       <b-modal ref="statusModal" >
         <div style="color:#000;">{{modalText}}</div>
@@ -192,13 +207,14 @@ export default {
       iostNumber: 0,
       walletAccount:'',
       contractBalance:{},
+      productList: [],
       accountInfo:{},
       producerVotes: 0,
       tokenbalance:0,
       votebalances:0,
       frozenbalances:0,
       navigator:{},
-      exchangeNumber: 0, 
+      exchangeNumber: 0,
       isloading: false,
       txhash:'',
       txMessage: '',
@@ -230,6 +246,9 @@ export default {
     })
     this.$common.getProducerInfo(nodeAddr).then( res => {
       this.producerVotes = res.votes
+    })
+    this.$common.getProductList().then( res => {
+      this.productList = res.data;
     })
     this.getContractInfo();
     this.navigator = window.navigator
@@ -341,6 +360,10 @@ export default {
           }
         }
       }
+    },
+
+    go (prod){
+      this.$router.push('/exchange/' + prod.pId)
     },
 
     vote(){
@@ -568,6 +591,40 @@ export default {
           justify-content: space-between;
           align-items: center;
         }
+      }
+    }
+    .mall-web-view {
+      li {
+        display: inline-block;
+        width: 160px;
+        height: 170px;
+        background: white;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        img {
+          border-radius: 4px;
+          width: 100%;
+        }
+        .text-panel {
+          padding: 0 14px;
+          font-size: 12px;
+          margin-top: 4px;
+          .prod-name, .payment {
+            margin-top: 2px;
+            overflow: hidden;
+            height: 18px;
+            line-height: 18px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color :#3E3E3E;
+          }
+          .payment {
+            color: #007bff;
+          }
+        }
+      }
+      li:nth-child(even){
+        margin-left: 10px;
       }
     }
   }

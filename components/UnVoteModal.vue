@@ -5,7 +5,7 @@
         暂无数据
       </div>
       <div v-else>
-        <b-list-group >
+        <b-list-group>
           <b-list-group-item class="item" v-for="(item,index) in voteList" :key="index">
             <span>节点：{{item.option}} <span v-if="item.option === nodeAddr" style="color:red;font-size: 12px;">(双挖中)</span></span> <span >票数：{{item.votes}}</span>  <div class="unvote-btn" @click="selectNode(item)">取消投票</div>
           </b-list-group-item>

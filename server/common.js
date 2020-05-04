@@ -1,5 +1,5 @@
 export default function API(axios) {
-  const apiUrl = '/api'
+  const apiUrl = 'https://gt.bitapp.net/api'
   const endpointUrl = 'https://www.iostabc.com/endpoint'
   // const apiUrl = 'https://www.iostabc.com/api/abctest'
   const iosturl = 'https://www.iostabc.com/api'
@@ -24,6 +24,9 @@ export default function API(axios) {
     },
     getProducerInfo (producer) {
       return axios.get(`${iosturl}/producer/${producer}`)
+    },
+    getProductList () {
+      return axios.get(`${apiUrl}/mall/products`)
     },
     getPrice () {
       return axios.get(`${apiUrl}/price`)
