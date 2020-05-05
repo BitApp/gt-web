@@ -120,7 +120,7 @@
                 <div class="mt-20">
                   <b-btn block size="lg" variant="primary" @click="exchange">兑换</b-btn>
                 </div>
-                <div class="mt-15 ta">
+                <div class="mt-15">
                   <b-btn variant="link" @click="historyModal">查看兑换记录 ></b-btn>
                 </div>
               </div>
@@ -135,11 +135,102 @@
             </div>
           </div>
           <HistoryModal ref="historyModal" />
+          <ExchangeModal ref="exchangeModal" />
+          <CMExchangeModal ref="cmExchangeModal"/>
+          <CMOpenModal ref="cmOpenModal"/>
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
         <b-tab title="积分商城">
           <ul class="mall-web-view mt-20">
-            <li v-for="(item, index) in productList" :key="index" @click="() => { go(item) }">
+            <li v-for="(item, index) in productList.slice(0, 2)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(2, 4)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(4, 6)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(6, 8)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(8, 10)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(10, 12)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(12, 14)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(14, 16)" :key="index" @click="() => { go(item) }">
+              <div>
+                <img :src="item.imgs[0]" alt="">
+              </div>
+              <div class="text-panel">
+                <div class="prod-name">{{item.name}}</div>
+                <div class="payment">{{item.price}} {{item.token}}</div>
+              </div>
+            </li>
+          </ul>
+          <ul class="mall-web-view">
+            <li v-for="(item, index) in productList.slice(16, 18)" :key="index" @click="() => { go(item) }">
               <div>
                 <img :src="item.imgs[0]" alt="">
               </div>
@@ -150,8 +241,54 @@
             </li>
           </ul>
           <p class="mt-20 ta-c">
-            商城即将上线，敬请期待
+            更多商品正在接入
           </p>
+          <div class="mt-15 ta-c">
+            <b-btn variant="link" @click="exchangeModal">我的兑换记录 ></b-btn>
+          </div>
+        </b-tab>
+        <b-tab title="积分夺宝" v-if="cmList.length">
+          <div class="prod-content mt-20">
+            <div>
+              <img src="/imgs/iost.jpg" alt="">
+            </div>
+            <div class="text-panel">
+              <div class="prod-name">IOST x 1888 枚</div>
+              <div class="price">
+                <span class="label">价格: </span>
+                <span class="value">200 guild_token</span>
+              </div>
+              <div class="countdown-wrapper">
+                <span class="label">开奖倒计时: </span>
+                <VueCountdown
+                 class="value" :time="cmList[0].lastOpenTime + cmList[0].timeStep">
+                  <template slot-scope="props">{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
+                </VueCountdown>
+              </div>
+              <div class="inventory  mt-20">
+                <span class="label">期数: </span>
+                <span class="value">{{cmList.length ? cmList[0].coinMoreNumber : "-"}}</span>
+              </div>
+              <div class="sep"></div>
+              <p class="desc">
+                每次参与消耗200GT，单个地址同期最多参与5000GT
+                <br>
+                <br>
+                <span class="fb">开奖规则</span>
+                <br>
+                满30000GT，72小时后开奖
+                <br>
+                未满30000GT，超过72小时后满30000GT开奖
+              </p>
+            </div>
+            <div class="button-panel">
+              <b-btn class="mt-20 btn-exhange" block size="lg" variant="primary" @click="coinMore">兑换</b-btn>
+            </div>
+          </div>
+          <div class="mt-15 ta-c">
+            <b-btn variant="link" @click="openCMExchangeModel">查看参与记录 ></b-btn>
+            <b-btn variant="link" @click="openCMOpenModel">查看往期记录 ></b-btn>
+          </div>
         </b-tab>
       </b-tabs>
       <b-modal ref="statusModal" >
@@ -170,13 +307,16 @@
   </div>
 </template>
 <script>
-import Vue from "vue"
+import Vue from 'vue'
 import IOST from 'iost'
-import DiffLabel from '~/components/DiffLabel.vue'
-import HistoryModal from '~/components/HistoryModal.vue'
+import DiffLabel from '~/components/DiffLabel'
+import HistoryModal from '~/components/HistoryModal'
+import ExchangeModal from '~/components/ExchangeModal'
+import CMExchangeModal from '~/components/CMExchangeModel'
+import CMOpenModal from '~/components/CMOpenModal'
 import VueCountdown from '@chenfengyuan/vue-countdown'
-import TipsModal from '~/components/TipsModal.vue'
-import UnVoteModal from '~/components/UnVoteModal.vue'
+import TipsModal from '~/components/TipsModal'
+import UnVoteModal from '~/components/UnVoteModal'
 import { mapState } from "vuex"
 import cookies from "~/plugins/cookies"
 import {contract, gtPrice, nodeAddr, DAY_MAX} from "~/plugins/variables"
@@ -186,6 +326,9 @@ export default {
     DiffLabel,
     TipsModal,
     HistoryModal,
+    ExchangeModal,
+    CMExchangeModal,
+    CMOpenModal,
     UnVoteModal,
     VueCountdown
   },
@@ -208,6 +351,7 @@ export default {
       walletAccount:'',
       contractBalance:{},
       productList: [],
+      cmList: [],
       accountInfo:{},
       producerVotes: 0,
       tokenbalance:0,
@@ -249,6 +393,9 @@ export default {
     })
     this.$common.getProductList().then( res => {
       this.productList = res.data;
+    })
+    this.$common.getCoinMoreList().then( res => {
+      this.cmList = res.data
     })
     this.getContractInfo();
     this.navigator = window.navigator
@@ -301,6 +448,18 @@ export default {
       this.$refs['historyModal'].showModal(type)
     },
 
+    exchangeModal(){
+      this.$refs['exchangeModal'].showModal()
+    },
+
+    openCMExchangeModel(){
+      this.$refs['cmExchangeModal'].showModal()
+    },
+
+    openCMOpenModel(){
+      this.$refs['cmOpenModal'].showModal()
+    },
+
     initIwallet(){
       const _this = this
       var timeInterval = setInterval(() => {
@@ -313,7 +472,7 @@ export default {
             _this.walletAccount = account
             _this.$store.commit('setWalletAccount', account) 
             _this.getAccountInfo()
-            _this.$common.getTokenBalcnce(account).then( res =>{
+            _this.$common.getTokenBalance(account, "guild_token").then( res =>{
               _this.tokenbalance = res.balance
             })
           }
@@ -358,6 +517,28 @@ export default {
               alert("兑换失败")
             })
           }
+        }
+      }
+    },
+
+    coinMore () {
+      if (200 > this.tokenbalance) {
+        alert("GT余额不足")
+      } else {
+        if(confirm(`确定参与IOST积分夺宝吗？`)){
+          const iost = IWalletJS.newIOST(IOST)
+          const ctx = iost.callABI(contract, "coinMore", [this.cmList[0].pId])
+          ctx.gasLimit = 300000
+          const _this = this
+          iost.signAndSend(ctx).on('pending', (trx) => {
+            alert("夺宝成功，请等待交易确认")
+          })
+          .on('success', (result) => {
+            // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
+          })
+          .on('failed', (failed) => {
+            alert("夺宝失败")
+          })
         }
       }
     },
@@ -490,22 +671,6 @@ export default {
         }
       }
     }
-    .countdown {
-      a {
-        color:#39AFFF;
-      }
-      .countdown-content {
-        padding: 20px;
-        align-items: center;
-        background: #2A3657;
-        border-radius: 8px;
-        justify-content: space-between;
-        .number {
-          font-weight: bold;
-          color: #39AFFF;
-        }
-      }
-    }
     .vote-web-view{
       .info-view{
         padding: 15px;
@@ -594,8 +759,9 @@ export default {
       }
     }
     .mall-web-view {
+      display: flex;
+      justify-content: space-around; 
       li {
-        display: inline-block;
         width: 160px;
         height: 170px;
         background: white;
@@ -623,8 +789,69 @@ export default {
           }
         }
       }
-      li:nth-child(even){
-        margin-left: 10px;
+    }
+    .prod-content {
+      display: inline-block;
+      margin-top: 10px;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      padding-bottom: 20px;
+      img {
+        border-radius: 8px;
+        width: 100%;
+      }
+      .text-panel {
+        padding: 0 14px;
+        margin-top: 4px;
+        .prod-name, .price {
+          margin-top: 2px;
+          overflow: hidden;
+          height: 28px;
+          line-height: 28px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color :#3E3E3E;
+          margin-bottom: 10px;
+        }
+        .prod-name{
+          font-size: 14px;
+          font-weight: bold;
+        }
+        .price {
+          display: flex;
+          justify-content: space-between;
+          .value {
+            color: #007bff;
+          }
+        }
+        .inventory {
+          color: #3E3E3E;
+          display: flex;
+          justify-content: space-between;
+          .value {
+            color: #8E8E8E;
+          }
+        }
+        .countdown-wrapper {
+          color: #3E3E3E;
+          display: flex;
+          justify-content: space-between;
+          .value {
+            color:#007bff;
+          }
+        }
+      }
+      .sep {
+        height: 1px;
+        background: #F5F6F9;
+        margin: 10px 0;
+      }
+      .desc {
+        color:#8E8E8E;
+      }
+      .button-panel {
+        padding: 0 14px;
       }
     }
   }

@@ -19,14 +19,20 @@ export default function API(axios) {
     getTotaldestroy () {
       return axios.get(`${apiUrl}/totaldestroy`)
     },
-    getTokenBalcnce (id) {
-      return axios.get(`${endpointUrl}/getTokenBalance/${id}/guild_token/1`)
+    getTokenBalance (id, token) {
+      return axios.get(`${endpointUrl}/getTokenBalance/${id}/${token}/1`)
     },
     getProducerInfo (producer) {
       return axios.get(`${iosturl}/producer/${producer}`)
     },
     getProductList () {
       return axios.get(`${apiUrl}/mall/products`)
+    },
+    getCoinMoreList () {
+      return axios.get(`${apiUrl}/cm/list`)
+    },
+    getProduct (pid) {
+      return axios.get(`${apiUrl}/mall/products/${pid}`)
     },
     getPrice () {
       return axios.get(`${apiUrl}/price`)
@@ -41,6 +47,30 @@ export default function API(axios) {
     },
     getExchangeHistory (account, { page = 1, size = 20 } = {}) {
       return axios.get(`${apiUrl}/exchanges/${account}`,{
+        params: {
+          page,
+          size,
+        }
+      })
+    },
+    getProductExchangeHistory (account, { page = 1, size = 20 } = {}) {
+      return axios.get(`${apiUrl}/mall/dealRecord?buyer=${account}`,{
+        params: {
+          page,
+          size,
+        }
+      })
+    },
+    getCMExchangeHistory(account,  { page = 1, size = 20 } = {}) {
+      return axios.get(`${apiUrl}/mall/cmHistory?from=${account}`,{
+        params: {
+          page,
+          size,
+        }
+      })
+    },
+    getCMOpenHistory({ page = 1, size = 20 } = {}) {
+      return axios.get(`${apiUrl}/mall/openHistory`,{
         params: {
           page,
           size,
