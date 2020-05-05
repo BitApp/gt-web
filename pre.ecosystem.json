@@ -1,10 +1,10 @@
 {
   "apps" : [
     {
-      "name"      : "gt-web",
+      "name"      : "test-gt-web",
       "script"    : "server/index.js",
       "instances" : 0,
-      "instance_var": "GT-WEB",
+      "instance_var": "TEST-GT-WEB",
       "exec_mode" : "cluster",
       "watch"     : false,
       "ignore_watch": [
@@ -16,7 +16,8 @@
       "mergeLogs" : false,
       "env": {
         "NODE_ENV": "production",
-        "PORT": 4000
+        "SERVER_ENV": "pre",
+        "PORT": 5000
       }
     }
   ]

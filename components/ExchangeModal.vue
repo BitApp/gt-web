@@ -9,7 +9,7 @@
           <span>时间：{{new Date(item.time).toLocaleString()}}</span> 
           <span class="ml-2">商品：{{item.product.name}}</span> 
           <span class="ml-2">交易：<b-link target="_blank" :href="'https://www.iostabc.com/tx/' + item.hash">{{item.hash.slice(0,6) + "..." + item.hash.slice(-6)}}</b-link></span>
-          <span class="ml-2">卖家微信：{{item.product.weChat}}</span>
+          <span class="ml-2">卖家微信：{{item.product.weChat}} (联系卖家发货)</span>
         </b-list-group-item>
       </b-list-group>
       <div class="pagination-view">
