@@ -6,10 +6,10 @@
     <div v-else>
       <b-list-group v-if="openList.length>0">
         <b-list-group-item class="item"  v-for="(item,index) in openList" :key="index">
-          <span>GT数量：{{item.amount}}</span> 
+          <span>期数：{{item.coinMoreNumber}}</span> 
           <!--<span class="ml-2">兑换IOST数量：{{item.iost_amount}}</span>--> 
-          <span class="ml-2">交易：<b-link target="_blank" :href="'https://www.iostabc.com/tx/' + item.hash">{{item.hash.slice(0,8) + "..." + item.hash.slice(-8)}}</b-link></span>
-          <span class="ml-2">所在区块：{{item.block}}</span>
+          <span>时间：{{new Date(item.time).toLocaleString()}}</span> 
+          <span class="ml-2">获奖账户：{{item.winner}}</span>
         </b-list-group-item>
       </b-list-group>
       <div class="pagination-view">
@@ -46,6 +46,7 @@ export default {
     showModal(){
       this.walletAccount = this.$store.getters.getWalletAccount
       this.$refs['exchange-modal'].show()
+      this.getList()
     },
     modalHide(){
       this.exchangeList = []

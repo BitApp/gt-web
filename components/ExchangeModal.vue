@@ -7,9 +7,9 @@
       <b-list-group v-if="exchangeList.length>0">
         <b-list-group-item class="item"  v-for="(item,index) in exchangeList" :key="index">
           <span>时间：{{new Date(item.time).toLocaleString()}}</span> 
-          <!--<span class="ml-2">兑换IOST数量：{{item.iost_amount}}</span>--> 
+          <span class="ml-2">商品：{{item.product.name}}</span> 
           <span class="ml-2">交易：<b-link target="_blank" :href="'https://www.iostabc.com/tx/' + item.hash">{{item.hash.slice(0,6) + "..." + item.hash.slice(-6)}}</b-link></span>
-          <span class="ml-2">账户：{{item.buyer}}</span>
+          <span class="ml-2">卖家微信：{{item.product.weChat}}</span>
         </b-list-group-item>
       </b-list-group>
       <div class="pagination-view">

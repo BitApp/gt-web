@@ -62,7 +62,7 @@ export default function API(axios) {
       })
     },
     getCMExchangeHistory(account,  { page = 1, size = 20 } = {}) {
-      return axios.get(`${apiUrl}/mall/cmHistory?from=${account}`,{
+      return axios.get(`${apiUrl}/cm/cmHistory?from=${account}`,{
         params: {
           page,
           size,
@@ -70,7 +70,7 @@ export default function API(axios) {
       })
     },
     getCMOpenHistory({ page = 1, size = 20 } = {}) {
-      return axios.get(`${apiUrl}/mall/openHistory`,{
+      return axios.get(`${apiUrl}/cm/openHistory`,{
         params: {
           page,
           size,

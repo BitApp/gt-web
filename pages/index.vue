@@ -256,18 +256,18 @@
               <div class="prod-name">IOST x 1888 枚</div>
               <div class="price">
                 <span class="label">价格: </span>
-                <span class="value">200 guild_token</span>
+                <span class="value">{{cmList[cmIndex].price}} {{cmList[cmIndex].token}}</span>
               </div>
               <div class="countdown-wrapper">
                 <span class="label">开奖倒计时: </span>
                 <VueCountdown
-                 class="value" :time="cmList[0].lastOpenTime + cmList[0].timeStep">
+                 class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep">
                   <template slot-scope="props">{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
                 </VueCountdown>
               </div>
               <div class="inventory  mt-20">
                 <span class="label">期数: </span>
-                <span class="value">{{cmList.length ? cmList[0].coinMoreNumber : "-"}}</span>
+                <span class="value">{{cmList.length ? cmList[cmIndex].coinMoreNumber : "-"}}</span>
               </div>
               <div class="sep"></div>
               <p class="desc">
@@ -351,10 +351,12 @@ export default {
       walletAccount:'',
       contractBalance:{},
       productList: [],
+      cmIndex: 1,
       cmList: [],
       accountInfo:{},
       producerVotes: 0,
       tokenbalance:0,
+      iostbalance: 0,
       votebalances:0,
       frozenbalances:0,
       navigator:{},
@@ -475,6 +477,9 @@ export default {
             _this.$common.getTokenBalance(account, "guild_token").then( res =>{
               _this.tokenbalance = res.balance
             })
+            _this.$common.getTokenBalance(account, "iost").then( res =>{
+              _this.iostbalance = res.balance
+            })
           }
         })
         }
@@ -504,6 +509,7 @@ export default {
           } else {
             const iost = IWalletJS.newIOST(IOST)
             const ctx = iost.callABI(contract, "exchange", [this.walletAccount, this.exchangeNumber.toString()])
+            ctx.addApprove("guild_token", this.exchangeNumber.toString());
             ctx.gasLimit = 300000
             const _this = this
             iost.signAndSend(ctx).on('pending', (trx) => {
@@ -522,24 +528,33 @@ export default {
     },
 
     coinMore () {
-      if (200 > this.tokenbalance) {
-        alert("GT余额不足")
-      } else {
-        if(confirm(`确定参与IOST积分夺宝吗？`)){
-          const iost = IWalletJS.newIOST(IOST)
-          const ctx = iost.callABI(contract, "coinMore", [this.cmList[0].pId])
-          ctx.gasLimit = 300000
-          const _this = this
-          iost.signAndSend(ctx).on('pending', (trx) => {
-            alert("夺宝成功，请等待交易确认")
-          })
-          .on('success', (result) => {
-            // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
-          })
-          .on('failed', (failed) => {
-            alert("夺宝失败")
-          })
+      const prod = this.cmList[this.cmIndex];
+      if (prod.token  === "guild_token") {
+        if (prod.price > this.tokenbalance) {
+          alert("GT余额不足")
+          return
         }
+      } else if(prod.token  === "iost") {
+        if (prod.price > this.iostbalance) {
+          alert("IOST余额不足")
+          return
+        }
+      }
+      if(confirm(`确定参与IOST积分夺宝吗？`)){
+        const iost = IWalletJS.newIOST(IOST)
+        const ctx = iost.callABI(contract, "coinMore", [prod.pId])
+        ctx.gasLimit = 300000
+        ctx.addApprove(prod.token, prod.price.toString());
+        const _this = this
+        iost.signAndSend(ctx).on('pending', (trx) => {
+          alert("夺宝成功，请等待交易确认")
+        })
+        .on('success', (result) => {
+          // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
+        })
+        .on('failed', (failed) => {
+          alert("夺宝失败")
+        })
       }
     },
 

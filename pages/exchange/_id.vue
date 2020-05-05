@@ -146,13 +146,11 @@ export default {
         if(confirm(`确定兑换${this.prod.name} ？`)){
           const iost = IWalletJS.newIOST(IOST)
           const ctx = iost.callABI(contract, "buyProduct", [this.prod.pId])
-          if (this.prod.token === "iost") {
-            ctx.addApprove("iost", this.prod.price.toString());
-          }
+          ctx.addApprove(this.prod.token, this.prod.price.toString());
           ctx.gasLimit = 300000
           const _this = this
           iost.signAndSend(ctx).on("pending", (trx) => {
-            alert("兑换" + _this.prod.name + "成功")
+            alert("兑换" + _this.prod.name + "成功, 恭喜您已获得" + _this.prod.name + ", " + "如是实物请联系卖家: " + _this.prod.weChat)
           })
           .on('success', (result) => {
             // alert(`兑换${this.exchangeNumber}GT≈${this.fixedNumber(this.exchangeNumber * 0.066)}GT成功`)
