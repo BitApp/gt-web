@@ -7,16 +7,19 @@
       @dismissed="dismissCountDown=0"
       @dismiss-count-down="countDownChanged"
     >
-    <div>{{alertText}}</div>
+      <div>{{alertText}}</div>
       <div class="mt-2" v-if="faileddes != ''">
         {{faileddes.message||faileddes}}
       </div>
     </b-alert>
     <div class="gt-web-index clearfix">
-      <div class="fr">
-        <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
+      <div class="notice">
+        <img width="15" src="~assets/imgs/icon_notice.svg">：每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得。
       </div>
-      <b-tabs pills>
+      <!-- <div class="fr">
+        <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
+      </div> -->
+      <b-tabs pills class="mt-20">
         <b-tab title="投票双挖" active>
           <div class="vote-web-view">
             <div class="banner-bg mt-10">
@@ -644,13 +647,6 @@ export default {
   beforeDestroy(){
     clearInterval()
   }
-
-  // async asyncData({ req, app, query, $axios }) {
-  //   const ip = await $axios.$get('http://icanhazip.com')
-  //   return {
-  //     ip: ip
-  //   }
-  // },
 }
 </script>
 
@@ -659,10 +655,20 @@ export default {
   padding: 0 calc(50% - 280px);
   min-width: 350px;
   font-size: 14px;
+  
   .gt-web-index {
+    .notice{
+      background:rgba(42,54,87,1);
+      border-radius: 10px;
+      padding: 10px 15px;
+      color: white;
+    }
     padding: 30px 20px;
     .mt-8 {
       margin-top: 8px;
+    }
+    .mt-20 {
+      margin-top: 20px;
     }
     .banner{
       border-radius: 8px;

@@ -12,7 +12,7 @@ const { Nuxt, Builder } = require('nuxt')
 const app = new Koa()
 
 // Import and Set Nuxt.js options
-let config = {}
+const config = {}
 config.dev = !(app.env === 'production')
 
 async function start() {

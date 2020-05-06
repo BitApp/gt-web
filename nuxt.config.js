@@ -40,7 +40,7 @@ module.exports = {
   */
   plugins: [
     "~/plugins/cookies",
-    '~/plugins/utils',
+    "~/plugins/utils",
     { src: "~/plugins/i18n"},
     {src:'~/plugins/service', ssr:true},
     { src: "~/plugins/countdown", ssr: false},
@@ -51,7 +51,6 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios'
   ],
