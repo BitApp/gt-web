@@ -55,7 +55,6 @@ import Vue from "vue"
 import IOST from 'iost'
 import DiffLabel from '~/components/DiffLabel.vue'
 import HistoryModal from '~/components/HistoryModal.vue'
-import VueCountdown from '@chenfengyuan/vue-countdown'
 import TipsModal from '~/components/TipsModal.vue'
 import UnVoteModal from '~/components/UnVoteModal.vue'
 import { mapState } from "vuex"

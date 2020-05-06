@@ -263,10 +263,11 @@
               </div>
               <div class="countdown-wrapper">
                 <span class="label">开奖倒计时: </span>
-                <VueCountdown
+                <VueCountdown v-if="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep > Date.now()"
                  class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep">
                   <template slot-scope="props">{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
                 </VueCountdown>
+                <span>已开奖</span>
               </div>
               <div class="inventory  mt-20">
                 <span class="label">期数: </span>
