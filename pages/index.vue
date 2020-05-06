@@ -151,7 +151,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -162,7 +162,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -173,7 +173,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -184,7 +184,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -195,7 +195,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -206,7 +206,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -217,7 +217,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -228,7 +228,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -239,7 +239,7 @@
               </div>
               <div class="text-panel">
                 <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{item.token}}</div>
+                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
           </ul>
@@ -259,7 +259,7 @@
               <div class="prod-name">IOST x 1888 枚</div>
               <div class="price">
                 <span class="label">价格: </span>
-                <span class="value">{{cmList[cmIndex].price}} {{cmList[cmIndex].token}}</span>
+                <span class="value">{{cmList[cmIndex].price}} {{tokenHash[cmList[cmIndex].token]}}</span>
               </div>
               <div class="countdown-wrapper">
                 <span class="label">开奖倒计时: </span>
@@ -367,6 +367,10 @@ export default {
       navigator:{},
       exchangeNumber: 0,
       isloading: false,
+      tokenHash: {
+        "guild_token": "GT",
+        "iost": "IOST"
+      },
       txhash:'',
       txMessage: '',
       modalText:'',

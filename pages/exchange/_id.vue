@@ -32,7 +32,7 @@
           <div class="prod-name">{{prod.name}}</div>
           <div class="price">
             <span class="label">价格: </span>
-            <span class="value">{{ prod.price + " " + prod.token }}</span>
+            <span class="value">{{ prod.price + " " + tokenHash[prod.token]}}</span>
           </div>
           <div class="inventory">
             <span class="label">库存: </span>
@@ -69,6 +69,10 @@ export default {
   },
   data () {
     return {
+      tokenHash: {
+        "guild_token": "GT",
+        "iost": "IOST"
+      },
       alertText: '',
       faileddes:'',
       dismissSecs: 5,
@@ -140,7 +144,7 @@ export default {
 
     exchange () {
       if (this.prod.price > this.tokenBalance) {
-        alert(this.prod.token + "余额不足")
+        alert(tokenHash[this.prod.token] + "余额不足")
       } else {
         if(confirm(`确定兑换${this.prod.name} ？`)){
           const iost = IWalletJS.newIOST(IOST)
