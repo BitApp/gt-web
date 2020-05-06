@@ -14,13 +14,13 @@
     </b-alert>
     <div class="gt-web-index clearfix">
       <div class="notice">
-        <img width="15" src="~assets/imgs/icon_notice.svg">：每天固定发行5万Token，按照投票用户的投票占比清风链节点总得票数的比例分得。
+        <img width="15" src="~assets/imgs/icon_notice.svg">：清风链游公会GT积分商城正式上线，更多好礼正在接入，欢迎大家体验及合作。
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
       </div> -->
       <b-tabs pills class="mt-20">
-        <b-tab title="投票双挖" active>
+        <b-tab title="投票双挖" :active="tab==='1'" @click="tabChange(1)">
           <div class="vote-web-view">
             <div class="banner-bg mt-10">
               <div class="banner">
@@ -89,7 +89,7 @@
             </div>
           </div>
         </b-tab>
-        <b-tab title="积分兑换">
+        <b-tab title="积分兑换" :active="tab==='2'" @click="tabChange(2)">
           <div class="exchange-web-view mt-20">
             <div class="banner-bg mt-10">
               <div class="banner">
@@ -143,7 +143,7 @@
           <CMOpenModal ref="cmOpenModal"/>
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
-        <b-tab title="积分商城">
+        <b-tab title="积分商城" :active="tab==='3'" @click="tabChange(3)">
           <ul class="mall-web-view mt-20">
             <li v-for="(item, index) in productList.slice(0, 2)" :key="index" @click="() => { go(item) }">
               <div>
@@ -250,7 +250,7 @@
             <b-btn variant="link" @click="exchangeModal">我的兑换记录 ></b-btn>
           </div>
         </b-tab>
-        <b-tab title="积分夺宝" v-if="cmList.length">
+        <b-tab title="积分夺宝" v-if="cmList.length" :active="tab==='4'" @click="tabChange(4)">
           <div class="prod-content mt-20">
             <div>
               <img src="/imgs/iost.jpg" alt="">
@@ -341,6 +341,7 @@ export default {
   },
   data () {
     return {
+      tab: 1,
       voteNumber:'',
       gtNumber: '',
       alertText: '',
@@ -380,6 +381,11 @@ export default {
         {value:"zh_Hans_CN",text:'简体中文'},
         {value:"zh_Hant_HK",text:'繁體中文'},
       ]
+    }
+  },
+  async asyncData({ req, app, query, $axios }) {
+    return {
+      tab: query.tab
     }
   },
   head() {
@@ -564,6 +570,10 @@ export default {
 
     go (prod){
       this.$router.push('/exchange/' + prod.pId)
+    },
+
+    tabChange (tab) {
+      this.$router.push('/?tab=' + tab)
     },
 
     vote(){
@@ -874,6 +884,19 @@ export default {
       }
       .button-panel {
         padding: 0 14px;
+      }
+    }
+  }
+  
+}
+@media only screen and (max-width: 375px) {
+  .gt-body {
+    .gt-web-index {
+      .mall-web-view {
+        li {
+          width: 140px;
+          height: 154px;
+        }
       }
     }
   }
