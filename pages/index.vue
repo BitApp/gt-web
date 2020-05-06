@@ -232,7 +232,7 @@
               </div>
             </li>
           </ul>
-          <ul class="mall-web-view">
+          <!-- <ul class="mall-web-view">
             <li v-for="(item, index) in productList.slice(16, 18)" :key="index" @click="() => { go(item) }">
               <div>
                 <img :src="item.imgs[0]" alt="">
@@ -242,7 +242,7 @@
                 <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
               </div>
             </li>
-          </ul>
+          </ul> -->
           <p class="mt-20 ta-c">
             更多商品正在接入
           </p>
@@ -356,7 +356,7 @@ export default {
       walletAccount:'',
       contractBalance:{},
       productList: [],
-      cmIndex: 1,
+      cmIndex: 0,
       cmList: [],
       accountInfo:{},
       producerVotes: 0,
