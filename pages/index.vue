@@ -30,7 +30,7 @@
                     <div class="mt-8">
                       <div>1. 总量 2.1亿 / 2. 超级回购计划</div>
                       <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
-                      <div>5. 积分商城即将上线</div>
+                      <div>5. 积分商城已上线</div>
                     </div>
                   </div>
                   <img class="icon-gt" src="~/assets/imgs/icon_gt.svg" width="75">
@@ -84,7 +84,7 @@
               <p>2. 每天固定挖出5万Token，按照投票用户的投票占节点总得票数的比例分得</p>
               <p>3. 每过一年，日产量将减少为之前的一半</p>
               <p>4. 清风链游公会官方将每月固定配发5万IOST以{{gtPrice}} IOST/GT 的汇率回购GT代币（未来视节点票数而定，回购金额及回购汇率会有所增加）</p>
-              <p>5. 清风链游公会将在未来推出积分商城，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
+              <p>5. 清风链游公会积分商城已上线，大家可以使用GT兑换商城里的任意物品，包括实物和虚拟物品等</p>
               <p>6. 本活动最终解释权归清风链游公会所有</p>
             </div>
           </div>
@@ -99,7 +99,7 @@
                     <div class="mt-8">
                       <div>1. 总量 2.1亿 / 2. 超级回购计划</div>
                       <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
-                      <div>5. 积分商城即将上线</div>
+                      <div>5. 积分商城已上线</div>
                     </div>
                   </div>
                   <img class="icon-gt" src="~/assets/imgs/icon_gt.svg" width="75">
@@ -264,8 +264,8 @@
               <div class="countdown-wrapper">
                 <span class="label">开奖倒计时: </span>
                 <VueCountdown v-if="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep > Date.now()"
-                 class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep">
-                  <template slot-scope="props">{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
+                 class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep - Date.now()">
+                  <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
                 </VueCountdown>
                 <span v-else>已开奖</span>
               </div>
