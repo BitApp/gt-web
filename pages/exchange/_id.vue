@@ -144,7 +144,7 @@ export default {
 
     exchange () {
       if (this.prod.price > this.tokenBalance) {
-        alert(tokenHash[this.prod.token] + "余额不足")
+        alert(this.tokenHash[this.prod.token] + "余额不足")
       } else {
         if(confirm(`确定兑换${this.prod.name} ？`)){
           const iost = IWalletJS.newIOST(IOST)
