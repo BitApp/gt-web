@@ -280,7 +280,7 @@
               </div>
               <div class="sep"></div>
               <p class="desc">
-                每次参与消耗200GT，单个地址同期最多参与5000GT
+                每次参与消耗200GT，单个地址同期最多参与5000GT，活动长期有效，最快3天一期
                 <br>
                 <br>
                 <span class="fb">开奖规则</span>
