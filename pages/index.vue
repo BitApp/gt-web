@@ -267,7 +267,12 @@
                  class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep">
                   <template slot-scope="props">{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
                 </VueCountdown>
-                <span>已开奖</span>
+                <span v-else>已开奖</span>
+              </div>
+              <div class="progress-wrapper mt-20">
+                <b-progress :max="cmList[cmIndex].copiesNumber * cmList[cmIndex].price">
+                  <b-progress-bar :value="cmList[cmIndex].serialNumber * cmList[cmIndex].price" :label="`${((cmList[cmIndex].serialNumber / cmList[cmIndex].copiesNumber) * 100).toFixed(2)}%`"></b-progress-bar>
+                </b-progress>
               </div>
               <div class="inventory  mt-20">
                 <span class="label">期数: </span>
