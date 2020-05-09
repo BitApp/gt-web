@@ -69,7 +69,11 @@
               <div class="font-norwester fs-20 scale-title mt-20">
                 1 GT = {{gtPrice}} IOST
               </div>
-              <div class="scale-desc">投票给[清风链游公会节点]即可免费获得 GT</div>
+              <div class="scale-desc">
+                投票给[清风链游公会节点]即可免费获得 GT
+                <br>
+                <span style="color:#43ac64">可在原有IOST staking 的收益基础上，额外获得GT收益</span>
+              </div>
               <b-input-group>
                 <b-form-input type="number" v-model="voteNumber" placeholder="请输入投票数量" autocomplete="off"></b-form-input>
                 <b-btn class="mt-20" block size="lg" variant="primary" @click="vote">投票</b-btn>
