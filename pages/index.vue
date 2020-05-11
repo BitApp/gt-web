@@ -269,9 +269,11 @@
                 <span class="label">开奖倒计时: </span>
                 <VueCountdown v-if="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep > Date.now()"
                  class="value" :time="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep - Date.now()">
-                  <template slot-scope="props">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
+                  <template slot-scope="props" style="font-size:12px">{{ props.days }} 天{{ props.hours }} 小时{{ props.minutes }} 分{{ props.seconds }} 秒</template>
                 </VueCountdown>
-                <span v-else>已开奖</span>
+                <span style="color:#8E8E8E;font-size:12px;" v-else-if="cmList[cmIndex].lastOpenTime + cmList[cmIndex].timeStep <= Date.now()
+                   && cmList[cmIndex].serialNumber < cmList[cmIndex].copiesNumber">超过72小时，等待奖池满30000GT</span>
+                <span style="color:#8E8E8E;font-size:12px" v-else>已开奖</span>
               </div>
               <div class="progress-wrapper mt-20">
                 <b-progress :max="cmList[cmIndex].copiesNumber * cmList[cmIndex].price">
