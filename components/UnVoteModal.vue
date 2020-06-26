@@ -14,7 +14,7 @@
     </b-modal>
     <b-modal  ref="unvote-confim-modal" class="modal">
       <div class="modal-text">
-        赎回的IOST7天之后才会到账，确定赎回吗?
+        赎回的IOST3天之后才会到账，确定赎回吗?
       </div>
       <template slot="modal-footer" slot-scope="{cancel}">
         <b-button size="sm" variant="info" @click="unVote()">
