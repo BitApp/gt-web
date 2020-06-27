@@ -10,7 +10,8 @@
         "票": "votes",
         "票数：": "votes: ",
         "节点：": "Producer: ",
-        "赎回的IOST7_c75e": "Redemption of IOST will not arrive until 3 days later, will you redeem it?"
+        "赎回的IOST3_5db0": "赎回的IOST3天之后才会到账，确定赎回吗?",
+        "赎回的IOST7_c75e@DEPRECATED@": "Redemption of IOST will not arrive until 3 days later, will you redeem it?"
     },
     "zh_Hans_CN": {
         "(双挖中)": "(双挖中)",
@@ -23,7 +24,7 @@
         "票": "票",
         "票数：": "票数：",
         "节点：": "节点：",
-        "赎回的IOST7_c75e": "赎回的IOST7天之后才会到账，确定赎回吗?"
+        "赎回的IOST3_5db0": "赎回的IOST3天之后才会到账，确定赎回吗?"
     },
     "zh_Hant_HK": {
         "(双挖中)": "(雙挖中)",
@@ -37,6 +38,7 @@
         "票": "票",
         "票数：": "票數：",
         "节点：": "節點：",
-        "赎回的IOST7_c75e": "贖回的IOST7天之後才會到賬，確定贖回嗎?"
+        "赎回的IOST3_5db0": "贖回的IOST3天之後才會到賬，確定贖回嗎?",
+        "赎回的IOST7_c75e@DEPRECATED@": "贖回的IOST7天之後才會到賬，確定贖回嗎?"
     }
 }
