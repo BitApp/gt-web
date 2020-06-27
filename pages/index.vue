@@ -14,7 +14,7 @@
     </b-alert>
     <div class="gt-web-index clearfix">
       <div class="notice">
-        <img width="15" src="~assets/imgs/icon_notice.svg"> GUILD_TOKEN 回购兑换池第四次回冲已完成，本次回购额度 50000 IOST 。
+        <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg"><span class="va-m">GUILD_TOKEN 回购兑换池第四次回冲已完成，本次回购额度 50000 IOST 。</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
@@ -254,7 +254,47 @@
             <b-btn variant="link" @click="exchangeModal">我的兑换记录 ></b-btn>
           </div>
         </b-tab>
-        <b-tab title="积分夺宝" v-if="cmList.length" :active="tab==='4'" @click="tabChange(4)">
+        <b-tab title="往期公告" :active="tab==='4'" @click="tabChange(4)">
+          <div class="banner-bg mt-20">
+              <div class="banner">
+                <div class="title">往期公告</div>
+                  <div class="notice">
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-06-10]</span>
+                        GUILD_TOKEN 回购兑换池第四次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-05-10]</span>GUILD_TOKEN 回购兑换池第三次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-05-05]</span>清风链游公会GT积分商城正式上线，更多好礼正在接入，欢迎大家体验及合作 。
+                      </span>
+                    </div>
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-04-10]</span>GUILD_TOKEN 回购兑换池第二次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-03-10]</span>GUILD_TOKEN 回购兑换池第一次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </b-tab>
+        <!-- <b-tab title="积分夺宝" v-if="cmList.length" :active="tab==='4'" @click="tabChange(4)">
           <div class="prod-content mt-20">
             <div>
               <img src="/imgs/iost.jpg" alt="">
@@ -304,7 +344,7 @@
             <b-btn variant="link" @click="openCMExchangeModel">查看参与记录 ></b-btn>
             <b-btn variant="link" @click="openCMOpenModel">查看往期记录 ></b-btn>
           </div>
-        </b-tab>
+        </b-tab> -->
       </b-tabs>
       <b-modal ref="statusModal" >
         <div style="color:#000;">{{modalText}}</div>
