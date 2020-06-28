@@ -14,7 +14,8 @@
     </b-alert>
     <div class="gt-web-index clearfix">
       <div class="notice">
-        <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg"><span class="va-m">GUILD_TOKEN 回购兑换池第四次回冲已完成，本次回购额度 50000 IOST 。</span>
+        <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+        <span class="va-m">投票双挖产出的GT（guild_token）已上线IOSTDEX可挂单交易，通过TokenPocket钱包搜索IOSTDEX即可访问！</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
@@ -79,7 +80,7 @@
                 <b-btn class="mt-20" block size="lg" variant="primary" @click="vote">投票</b-btn>
               </b-input-group>
               <div style="padding:10px">
-                <div class="scale-tip">当前[清风链游公会节点]总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给公会节点，每天可分得 {{'\xa0'+fixedNumber(gtNumber) + '\xa0'}} GT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST </div> 
+                <div class="scale-tip">当前[清风链游公会节点]总票数{{'\xa0'+parseInt(producerVotes) + '\xa0'}}, 投 {{'\xa0'+(voteNumber || 0)+'\xa0'}} IOST 给公会节点，每天可额外分得 {{'\xa0'+fixedNumber(gtNumber) + '\xa0'}} GT = {{'\xa0'+fixedNumber(iostNumber,6) + '\xa0'}} IOST </div> 
               </div>
             </div>
             <div>
@@ -259,6 +260,13 @@
               <div class="banner">
                 <div class="title">往期公告</div>
                   <div class="notice">
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-06-27]</span>
+                        投票双挖产出的GT（guild_token）已上线IOSTDEX可挂单交易，通过TokenPocket钱包搜索IOSTDEX即可访问！
+                      </span>
+                    </div>
                     <div class="mb-10 mt-10">
                       <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
                       <span class="va-m">
