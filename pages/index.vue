@@ -15,7 +15,7 @@
     <div class="gt-web-index clearfix">
       <div class="notice">
         <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
-        <span class="va-m">投票双挖产出的GT（guild_token）已上线IOSTDEX可挂单交易，通过TokenPocket钱包搜索IOSTDEX即可访问！</span>
+        <span class="va-m">GUILD_TOKEN 回购兑换池第五次回冲已完成，本次回购额度 50000 IOST 。</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
