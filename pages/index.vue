@@ -263,6 +263,13 @@
                     <div class="mb-10 mt-10">
                       <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
                       <span class="va-m">
+                        <span class="c-light mr-1">[2020-07-10]</span>
+                        GUILD_TOKEN 回购兑换池第五次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
                         <span class="c-light mr-1">[2020-06-27]</span>
                         投票双挖产出的GT（guild_token）已上线IOSTDEX可挂单交易，通过TokenPocket钱包搜索IOSTDEX即可访问！
                       </span>
