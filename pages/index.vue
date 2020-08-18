@@ -106,7 +106,8 @@
                     <div class="mt-8">
                       <div>1. 总量 2.1亿 / 2. 超级回购计划</div>
                       <div>3. 每年减半 / 4. 可随时兑换 IOST</div>
-                      <div>5. 积分商城已上线</div>
+                      <div>5. 持有积分每月空投IOST</div>
+                      <div>6. 积分商城已上线</div>
                     </div>
                   </div>
                   <img class="icon-gt" src="~/assets/imgs/icon_gt.svg" width="75">
