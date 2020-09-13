@@ -15,7 +15,7 @@
     <div class="gt-web-index clearfix">
       <div class="notice">
         <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
-        <span class="va-m">GUILD_TOKEN 回购兑换池第六次回冲已完成，本次回购额度 50000 IOST 。</span>
+        <span class="va-m">GUILD_TOKEN 回购兑换池第七次回冲已完成，本次回购额度 50000 IOST 。</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
@@ -263,6 +263,13 @@
               <div class="banner">
                 <div class="title">往期公告</div>
                   <div class="notice">
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-09-10]</span>
+                        GUILD_TOKEN 回购兑换池第七次回冲已完成，本次回购额度 50000 IOST 。
+                      </span>
+                    </div>
                     <div class="mb-10 mt-10">
                       <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
                       <span class="va-m">
