@@ -15,7 +15,7 @@
     <div class="gt-web-index clearfix">
       <div class="notice">
         <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
-        <span class="va-m">持有GT空投IOST第二期奖励已发放，本次空投比例1000GT：16.28IOST。</span>
+        <span class="va-m">积分已上线西瓜平台, 将于2020/10/28晚11点开矿(XG)，在tp钱包“发现”输入地址“app.xigua.ist”访问</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
@@ -263,6 +263,30 @@
               <div class="banner">
                 <div class="title">往期公告</div>
                   <div class="notice">
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-10-28]</span>
+                        <span>积分已上线西瓜平台</span>
+                        <br/>
+                        将于2020/10/28晚11点开矿(XG)，在tp钱包“发现”输入地址“app.xigua.ist”访问
+                        <br/>
+                        <br/>
+                        已同步开通两个交易对：
+                        <br/>
+                        guild_token/iost
+                        <br/>
+                        guild_token/xusd
+                        <br/>
+                        以上两个交易对都可进行交易及做市
+                        <br/>
+                        <br/>
+                        在西瓜挖矿上线后，为积分交易对进行做市可同步参与西瓜挖矿
+                        <br/>
+                        支持西瓜挖矿的交易对：guild_token/xusd
+                        <br/>
+                      </span>
+                    </div>
                     <div class="mb-10 mt-10">
                       <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
                       <span class="va-m">
