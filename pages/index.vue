@@ -15,13 +15,13 @@
     <div class="gt-web-index clearfix">
       <div class="notice">
         <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
-        <span class="va-m">积分已上线西瓜平台, 将于2020/10/28晚11点开矿(XG)，在tp钱包“发现”输入地址“app.xigua.ist”访问</span>
+        <span class="va-m">本节点决定于 2020 年 12 月 1 日起正式退出 IOST 节点合伙人，2020 年 12 月 1 日正式退出后，XG 挖矿和投票双挖将会同时停止。[详情见公告]</span>
       </div>
       <!-- <div class="fr">
         <b-form-select v-model="language" :options="langs" @change="changeLang"></b-form-select>
       </div> -->
       <b-tabs pills class="mt-20">
-        <b-tab title="投票双挖" :active="tab==='1'" @click="tabChange(1)">
+        <!-- <b-tab title="投票双挖" :active="tab==='1'" @click="tabChange(1)">
           <div class="vote-web-view">
             <div class="banner-bg mt-10">
               <div class="banner">
@@ -95,7 +95,7 @@
               <p>7. 本活动最终解释权归清风链游公会所有</p>
             </div>
           </div>
-        </b-tab>
+        </b-tab> -->
         <b-tab title="积分兑换" :active="tab==='2'" @click="tabChange(2)">
           <div class="exchange-web-view mt-20">
             <div class="banner-bg mt-10">
@@ -139,7 +139,7 @@
                 <span>兑换资金池：{{fixedNumber(contractBalance.balance,2)+ '\xa0 IOST'}}  </span>
                 <img class="icon_largerise" src="~/assets/imgs/icon_largerise2.svg">
               </div>
-              <div class="mt-10 c-light">兑换资金池每月10号回冲，目前每月回购额度5万IOST，后续视节点票数及GT减半情况提高回购额度及回购汇率</div>
+              <div class="mt-10 c-light">2020年12月1日正式开展回购工作，届时将会一次性为兑换资金池冲入一笔回购资金，回购汇率0.066IOST，回购截止日期：2020年12月31日</div>
               <div class="exchange-pool mt-15">
                 <span>总兑换：{{fixedNumber(totalExchange, 2)+ '\xa0 GT' + '\xa0 = \xa0' + fixedNumber(totalExchange * gtPrice,2) + '\xa0 IOST'}}  </span>
               </div>
@@ -151,7 +151,7 @@
           <CMOpenModal ref="cmOpenModal"/>
           <UnVoteModal ref="unvoteModal" @unVote="unvoteTip" />
         </b-tab>
-        <b-tab title="积分商城" :active="tab==='3'" @click="tabChange(3)">
+        <!-- <b-tab title="积分商城" :active="tab==='3'" @click="tabChange(3)">
           <ul class="mall-web-view mt-20">
             <li v-for="(item, index) in productList.slice(0, 2)" :key="index" @click="() => { go(item) }">
               <div>
@@ -240,29 +240,40 @@
               </div>
             </li>
           </ul>
-          <!-- <ul class="mall-web-view">
-            <li v-for="(item, index) in productList.slice(16, 18)" :key="index" @click="() => { go(item) }">
-              <div>
-                <img :src="item.imgs[0]" alt="">
-              </div>
-              <div class="text-panel">
-                <div class="prod-name">{{item.name}}</div>
-                <div class="payment">{{item.price}} {{tokenHash[item.token]}}</div>
-              </div>
-            </li>
-          </ul> -->
           <p class="mt-20 ta-c">
             更多商品正在接入
           </p>
           <div class="mt-15 ta-c">
             <b-btn variant="link" @click="exchangeModal">我的兑换记录 ></b-btn>
           </div>
-        </b-tab>
+        </b-tab> -->
         <b-tab title="往期公告" :active="tab==='4'" @click="tabChange(4)">
           <div class="banner-bg mt-20">
               <div class="banner">
                 <div class="title">往期公告</div>
                   <div class="notice">
+                    <div class="mb-10 mt-10">
+                      <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
+                      <span class="va-m">
+                        <span class="c-light mr-1">[2020-11-27]</span>
+                        “清风链游公会”退出 IOST 节点告知书
+                        <br>
+                        <br>
+                        “清风链游公会”为 IOST 链上合伙人节点，2019Q3、Q4、
+                        2020Q1 及 Q2 第二梯队，Q3 第三梯队。
+                        <br>
+                        <br>
+                        由于近期发生在 IOST 身上的“官方未通过社群投票表决取消了投票帐户的 staking 季度奖励”、“对已发行的链上代币 husd 进行强制重置使用权限”事件，本节点持坚决 反对态度，通过上述事件也体现出了 IOST 官方拥有极度中心化的权限，这不符合区块 链精神。故本节点决定于 2020 年 12 月 1 日起正式退出 IOST 节点合伙人。
+                        <br>
+                        1、官方未通过社群投票表决取消了投票帐户的 staking 季度奖励事件，节点看法是 IOST 官方在年中就已经公开宣传并实施了社群自治投票机制，对于这种重大事件(涉及 大部分参与 staking 的用户)的改动，应当通过投票表决，而不是官方一言堂决定。
+                        <br>
+                        2、对已发行的链上代币 husd 进行强制重置使用权限事件，IOST 官方宣称联系 husd 账号主人两个月未收到反馈，决定强制重置其账号对husd的使用权限并给予10万IOST 补偿奖励(时价约 3,540 元人民币)，这是奖励?这应该是赔偿(你这意思是你抢了人 家东西，人家还得谢谢你)。即便是为了 IOST 整体利益的考虑，但此做法是否太过于霸 道，且极度中心化的权限。举个极端例子，那是否在 IOST 主网上的所有项目代币，IOST 官方其实都有权限可以重置或决定归属。A 用户提前注册了商标，B 用户需要使用此商 标，那也只能双方协商解决，A 用户不愿意出售或无回复，B 就可以通过有关部门(此 处举例 IOST 官方)强行获得 A 名下的商标使用权限吗?这个权限意思就是，比如 IOST 链上如果有一个市值很大的项目，如果 IOST 官方想作恶，可以直接把这个项目的代币 权限转到自己名下，强行霸占此项目。IOST 对外宣传比 EOS 更去中心化，看起来这就是 最中心化的表现，与现实机构相比更要中心化到极致。(文末附官方截图)
+                        对于已通过 staking 投票免费挖出的 gt(guild_token)积分，初衷是为了使投票者获 得更多的收益，未进行兑换的节点将以 0.066IOST 的单价进行回收，回收截止 2020 年 12 月 31 日，回收方式:通过 TokenPocket 钱包搜索“清风链游公会”，选择积分兑换界 面进行兑换。
+                        2020 年 12 月 1 日正式退出后，XG 挖矿和投票双挖将会同时停止。
+                        <br>
+                        <img class="w100p mt-10" src="~assets/imgs/report.png"/>
+                      </span>
+                    </div>
                      <div class="mb-10 mt-10">
                       <img class="mr-1 va-m" width="15" src="~assets/imgs/icon_notice.svg">
                       <span class="va-m">
